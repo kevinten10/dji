@@ -22,11 +22,8 @@
 
 ## 🎮 立即体验
 
-> ⚠️ **在线体验**：CloudBase部署待完成。请先下载项目到本地体验：
-> ```bash
-> git clone https://github.com/kevinten10/dji.git
-> ```
-> 然后用浏览器直接打开以下文件即可运行！
+> ✅ **在线体验已部署！点击链接即可直接体验：**
+> 👉 **https://dji-sable.vercel.app**
 
 ### 3D无人机模拟器
 **浏览器中体验真实飞行！**
