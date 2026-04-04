@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJI 3D无人机模拟器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            max-width: 280px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #info h1 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #00d4ff;
+        }
+        #info p {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        #info .key {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 0 2px;
+        }
+        #telemetry {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #00ff88;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,212,255,0.3);
+        }
+        #telemetry div {
+            margin: 5px 0;
+        }
+        #controls-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            gap: 20px;
+        }
+        #controls-hint span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .icon-key {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <div id="info">
+        <h1>🚁 DJI 3D无人机模拟器</h1>
+        <p><strong>操作说明:</strong></p>
+        <p><span class="key">W</span><span class="key">S</span> 上升/下降</p>
+        <p><span class="key">A</span><span class="key">D</span> 左右旋转</p>
+        <p><span class="key">↑</span><span class="key">↓</span> 前后飞行</p>
+        <p><span class="key">←</span><span class="key">→</span> 左右平移</p>
+        <p><span class="key">R</span> 重置位置</p>
+        <p style="margin-top:12px;color:#888;font-size:12px;">拖拽鼠标旋转视角 | 滚轮缩放</p>
+    </div>
+    
+    <div id="telemetry">
+        <div>高度: <span id="altitude">0.0</span> m</div>
+        <div>速度: <span id="speed">0.0</span> m/s</div>
+        <div>位置: <span id="position">0, 0, 0</span></div>
+        <div>姿态: <span id="attitude">0°, 0°, 0°</span></div>
+    </div>
+    
+    <div id="controls-hint">
+        <span><div class="icon-key">W</div> 上升</span>
+        <span><div class="icon-key">S</div> 下降</span>
+        <span><div class="icon-key">A</div> 左旋</span>
+        <span><div class="icon-key">D</div> 右旋</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
