@@ -1,6 +1,9 @@
 // DJI 3D无人机模拟器
 // 使用Three.js构建的3D无人机飞行模拟器
 
+// DJI 3D无人机模拟器
+// 使用Three.js构建的3D无人机飞行模拟器
+
 let scene, camera, renderer, controls;
 let drone, droneGroup;
 let propellers = [];

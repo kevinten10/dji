@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>无人机躲避挑战</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
@@ -20,107 +16,61 @@
             justify-content: center;
             overflow: hidden;
         }
-        #gameContainer {
-            position: relative;
-        }
-        #gameCanvas {
-            border-radius: 16px;
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
-        }
-        #ui {
-            position: absolute;
+        #backBtn {
+            position: fixed;
             top: 20px;
             left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            color: #fff;
-            font-size: 18px;
+            z-index: 1000;
+            background: rgba(0,212,255,0.9);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        #backBtn:hover { background: #00ff88; transform: scale(1.05); }
+        #gameContainer { position: relative; }
+        #gameCanvas { border-radius: 16px; box-shadow: 0 0 40px rgba(0,212,255,0.3); }
+        #ui {
+            position: absolute; top: 20px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; color: #fff; font-size: 16px;
         }
         #ui .stat {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 10px 20px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.7); padding: 8px 16px;
+            border-radius: 20px; backdrop-filter: blur(10px);
         }
-        #ui .score {
-            color: #00ff88;
-        }
-        #ui .level {
-            color: #00d4ff;
-        }
-        #ui .lives {
-            color: #ff6b6b;
-        }
+        #ui .score { color: #00ff88; }
+        #ui .level { color: #00d4ff; }
+        #ui .lives { color: #ff6b6b; }
         #startScreen, #gameOverScreen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 16px;
-            backdrop-filter: blur(5px);
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9); display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 16px; backdrop-filter: blur(5px);
         }
-        #gameOverScreen {
-            display: none;
-        }
-        h1 {
-            color: #00d4ff;
-            font-size: 48px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-        }
-        .subtitle {
-            color: #888;
-            font-size: 18px;
-            margin-bottom: 40px;
-        }
+        #gameOverScreen { display: none; }
+        h1 { color: #00d4ff; font-size: 42px; margin-bottom: 15px; text-shadow: 0 0 20px rgba(0,212,255,0.5); }
+        .subtitle { color: #888; font-size: 16px; margin-bottom: 30px; }
         .btn {
             background: linear-gradient(135deg, #00d4ff 0%, #00ff88 100%);
-            color: #000;
-            border: none;
-            padding: 15px 50px;
-            font-size: 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: bold;
+            color: #000; border: none; padding: 12px 40px;
+            font-size: 18px; border-radius: 25px; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; font-weight: bold;
         }
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
-        }
-        .instructions {
-            color: #666;
-            margin-top: 30px;
-            text-align: center;
-            line-height: 1.8;
-        }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,212,255,0.5); }
+        .instructions { color: #666; margin-top: 25px; text-align: center; line-height: 1.8; }
         .instructions span {
-            display: inline-block;
-            background: rgba(255,255,255,0.1);
-            padding: 4px 12px;
-            border-radius: 6px;
-            margin: 0 4px;
-            font-family: monospace;
+            display: inline-block; background: rgba(255,255,255,0.1);
+            padding: 3px 10px; border-radius: 4px; font-family: monospace;
         }
-        #finalScore {
-            font-size: 72px;
-            color: #00ff88;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-        }
-        #droneIcon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
+        #finalScore { font-size: 64px; color: #00ff88; text-shadow: 0 0 30px rgba(0,255,136,0.5); }
+        #droneIcon { font-size: 70px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
+    <a href="/" id="backBtn">← 返回首页</a>
+    
     <div id="gameContainer">
         <canvas id="gameCanvas" width="800" height="600"></canvas>
         
@@ -136,8 +86,7 @@
             <p class="subtitle">操控无人机躲避障碍物，看看能飞多远！</p>
             <button class="btn" id="startBtn">开始飞行</button>
             <div class="instructions">
-                <p><span>↑</span><span>↓</span><span>←</span><span>→</span> 方向键控制移动</p>
-                <p>或使用 <span>W</span><span>A</span><span>S</span><span>D</span> 键</p>
+                <p><span>↑</span><span>↓</span><span>←</span><span>→</span> 或 <span>W</span><span>A</span><span>S</span><span>D</span> 控制移动</p>
             </div>
         </div>
         
@@ -145,7 +94,7 @@
             <h1>飞行结束</h1>
             <p class="subtitle">最终得分</p>
             <div id="finalScore">0</div>
-            <button class="btn" id="restartBtn">再来一次</button>
+            <button class="btn" id="restartBtn" style="margin-top:20px">再来一次</button>
         </div>
     </div>
 

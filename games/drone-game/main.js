@@ -1,5 +1,10 @@
 // 无人机躲避挑战游戏
 
+// 等待DOM加载完成
+document.addEventListener('DOMContentLoaded', function() {
+    initGame();
+});
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -467,72 +472,103 @@ function draw() {
 // 游戏循环
 function gameLoop() {
     if (!game.running) return;
-    
+
     update();
     draw();
-    
+
     requestAnimationFrame(gameLoop);
 }
 
-// 事件监听
-document.addEventListener('keydown', (e) => {
-    switch (e.key) {
-        case 'ArrowUp':
-        case 'w':
-        case 'W':
-            keys.up = true;
-            e.preventDefault();
-            break;
-        case 'ArrowDown':
-        case 's':
-        case 'S':
-            keys.down = true;
-            e.preventDefault();
-            break;
-        case 'ArrowLeft':
-        case 'a':
-        case 'A':
-            keys.left = true;
-            e.preventDefault();
-            break;
-        case 'ArrowRight':
-        case 'd':
-        case 'D':
-            keys.right = true;
-            e.preventDefault();
-            break;
-    }
-});
+// 重置游戏
+function resetGame() {
+    game.running = true;
+    game.score = 0;
+    game.level = 1;
+    game.lives = 3;
+    game.speed = 3;
+    game.obstacleSpeed = 3;
+    game.spawnRate = 60;
+    game.frameCount = 0;
 
-document.addEventListener('keyup', (e) => {
-    switch (e.key) {
-        case 'ArrowUp':
-        case 'w':
-        case 'W':
-            keys.up = false;
-            break;
-        case 'ArrowDown':
-        case 's':
-        case 'S':
-            keys.down = false;
-            break;
-        case 'ArrowLeft':
-        case 'a':
-        case 'A':
-            keys.left = false;
-            break;
-        case 'ArrowRight':
-        case 'd':
-        case 'D':
-            keys.right = false;
-            break;
-    }
-});
+    drone.x = 100;
+    drone.y = canvas.height / 2;
+    drone.velocityX = 0;
+    drone.velocityY = 0;
 
-document.getElementById('startBtn').addEventListener('click', resetGame);
-document.getElementById('restartBtn').addEventListener('click', resetGame);
+    obstacles = [];
 
-// 初始化
-initClouds();
-initStars();
-draw();
+    initClouds();
+    initStars();
+
+    updateUI();
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('gameOverScreen').style.display = 'none';
+
+    gameLoop();
+}
+
+// 初始化游戏
+function initGame() {
+    // 事件监听
+    document.addEventListener('keydown', (e) => {
+        switch (e.key) {
+            case 'ArrowUp':
+            case 'w':
+            case 'W':
+                keys.up = true;
+                e.preventDefault();
+                break;
+            case 'ArrowDown':
+            case 's':
+            case 'S':
+                keys.down = true;
+                e.preventDefault();
+                break;
+            case 'ArrowLeft':
+            case 'a':
+            case 'A':
+                keys.left = true;
+                e.preventDefault();
+                break;
+            case 'ArrowRight':
+            case 'd':
+            case 'D':
+                keys.right = true;
+                e.preventDefault();
+                break;
+        }
+    });
+
+    document.addEventListener('keyup', (e) => {
+        switch (e.key) {
+            case 'ArrowUp':
+            case 'w':
+            case 'W':
+                keys.up = false;
+                break;
+            case 'ArrowDown':
+            case 's':
+            case 'S':
+                keys.down = false;
+                break;
+            case 'ArrowLeft':
+            case 'a':
+            case 'A':
+                keys.left = false;
+                break;
+            case 'ArrowRight':
+            case 'd':
+            case 'D':
+                keys.right = false;
+                break;
+        }
+    });
+
+    document.getElementById('startBtn').addEventListener('click', resetGame);
+    document.getElementById('restartBtn').addEventListener('click', resetGame);
+
+    // 初始化
+    initClouds();
+    initStars();
+    draw();
+}
