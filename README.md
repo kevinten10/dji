@@ -1074,15 +1074,153 @@ DaVinci Resolve 还原步骤：
 > 用 AI 生成无人机视角的作品，或让 AI 自动帮你剪辑航拍视频
 
 ### 目录
-1. [AI 生成无人机视角图片](#1-ai-生成无人机视角图片)
-2. [AI 生成无人机视角视频](#2-ai-生成无人机视角视频)
-3. [AI 自动剪辑航拍视频](#3-ai-自动剪辑航拍视频)
+1. [AI 生图工具介绍（小白必看）](#1-ai-生图工具介绍小白必看)
+2. [AI 生成无人机视角图片](#2-ai-生成无人机视角图片)
+3. [AI 生成无人机视角视频](#3-ai-生成无人机视角视频)
+4. [AI 自动剪辑航拍视频](#4-ai-自动剪辑航拍视频)
 
 ---
 
-## 1. AI 生成无人机视角图片
+## 1. AI 生图工具介绍（小白必看）
+
+### 🎨 什么是 AI 生图？
+
+简单来说，AI 生图就是：**你输入一段文字描述（提示词/Prompt），AI 就能生成一张图片。**
+
+就像跟画家说"帮我画一幅航拍视角的日出照片"一样，AI 就是那个能听懂你的话并画出图片的"数字画家"。
+
+### 📱 主流 AI 生图工具
+
+| 工具 | 特点 | 难度 | 推荐度 |
+|------|------|------|--------|
+| **Nano Banana 2** | 中文友好，操作简单，免费使用 | ⭐ 简单 | ⭐⭐⭐⭐⭐ |
+| **Midjourney** | 质量最高，效果震撼 | ⭐⭐ 中等 | ⭐⭐⭐⭐ |
+| **Stable Diffusion** | 开源免费，本地运行 | ⭐⭐⭐ 较难 | ⭐⭐⭐ |
+| **DALL-E** | OpenAI 出品，兼容性好 | ⭐⭐ 中等 | ⭐⭐⭐⭐ |
+
+### 🚀 Nano Banana 2 使用指南（新手首选）
+
+Nano Banana 2 是基于 Google Gemini 的 AI 生图工具，**完全免费、中文友好、操作简单**，非常适合新手入门。
+
+#### 如何访问
+
+1. 打开 [nano-banana.io](https://nano-banana.io)（或搜索 Nano Banana）
+2. 选择 **"Image Generation"** 图像生成模式
+3. 输入提示词（Prompt）
+4. 点击生成，等待几秒即可获得图片
+
+#### Nano Banana 2 提示词结构（5要素法则）
+
+```
+优质提示词 = 主体 + 媒介/风格 + 构图/视角 + 光影/色彩 + 画质修饰
+```
+
+| 要素 | 说明 | 示例 |
+|------|------|------|
+| **主体** | 画面核心内容 | 山峰、湖泊、城市 |
+| **媒介/风格** | 摄影/绘画风格 | 写实摄影、电影感 |
+| **构图/视角** | 拍摄角度 | 航拍、鸟瞰、俯视 |
+| **光影/色彩** | 光线氛围 | 日出金光、黄昏暖调 |
+| **画质修饰** | 细节提升 | 8K、电影级、精致 |
+
+#### Nano Banana 2 航拍视角关键词
+
+| 中文描述 | 英文提示词 | 效果 |
+|---------|-----------|------|
+| 航拍视角 | `Aerial view / Bird's eye view` | 从上方俯视 |
+| 俯视 | `Top-down view` | 正上方垂直向下 |
+| 高空俯瞰 | `High altitude perspective` | 高处大范围视角 |
+| 低空航拍 | `Low altitude drone shot` | 近距离低空拍摄 |
+
+#### Nano Banana 2 使用小技巧
+
+```
+💡 提升出图质量的技巧：
+│
+├── 1. 使用英文提示词效果更好
+│   └── 如："aerial view of mountain lake" 优于 "航拍湖泊"
+│
+├── 2. 添加具体细节
+│   └── "golden hour lighting" 比 "好光线" 更有效
+│
+├── 3. 指定相机/品牌风格
+│   └── "shot on DJI Mavic 3" 可增加真实感
+│
+├── 4. 使用画质修饰词
+│   └── "8K, ultra sharp, cinematic" 提升细节
+│
+└── 5. 参考成功提示词
+    └── 多尝试、多收藏喜欢的图片提示词
+```
+
+---
+
+## 2. AI 生成无人机视角图片
 
 ### 主流 AI 工具的无人机视角提示词
+
+### Nano Banana 2 航拍提示词模板
+
+#### 📸 Nano Banana 2 按场景分类
+
+**山川自然**
+```
+aerial view of a majestic mountain range at sunrise,
+turquoise lake reflecting the sky,
+lush green forests covering the slopes,
+morning mist hovering between peaks,
+DJI Mavic 3 cinematic color,
+8K resolution, national geographic style
+```
+
+**城市建筑**
+```
+bird's eye view of a modern city at golden hour,
+geometric street patterns,
+sunset casting long shadows,
+glass buildings reflecting orange sky,
+aerial urban photography, ultra detailed, 8K
+```
+
+**海岸岛屿**
+```
+aerial view of a tropical island,
+turquoise shallow waters meeting deep blue ocean,
+white sandy beach forming a curved coastline,
+palm trees swaying in the breeze,
+drone photography, vibrant colors, cinematic
+```
+
+**日出日落**
+```
+aerial drone shot at golden hour,
+overlooking a scenic valley,
+dramatic orange and purple sky,
+silhouette of mountains in distance,
+god rays breaking through clouds,
+cinematic color grading, movie poster quality
+```
+
+**中国风航拍**
+```
+Chinese landscape aerial view,
+mountains shrouded in ethereal mist,
+winding river through valleys,
+terraced fields from above,
+traditional Chinese painting aesthetic,
+ink wash style, serene atmosphere
+```
+
+#### 🎯 Nano Banana 2 电影感航拍模板
+
+```
+[场景描述], aerial drone cinematography,
+[高度] meters above ground,
+[时间] lighting with [光线类型],
+cinematic color grading,
+shot on [相机型号],
+[画质修饰], professional quality
+```
 
 #### Midjourney / DALL-E / Stable Diffusion 通用模板
 
@@ -1193,7 +1331,7 @@ professional aerial photography
 
 ---
 
-## 2. AI 生成无人机视角视频
+## 3. AI 生成无人机视角视频
 
 ### Runway Gen-4 / Pika 2.2 / Sora 航拍效果
 
@@ -1280,7 +1418,7 @@ long tracking shot, subtle motion blur
 
 ---
 
-## 3. AI 自动剪辑航拍视频
+## 4. AI 自动剪辑航拍视频
 
 ### AI 剪辑航拍视频的工作流程
 
