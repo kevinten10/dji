@@ -1,82 +1,81 @@
-# DJI Project Workspace
+# DJI Footage Copilot Workspace
 
 ## Project Overview
 
-这是一个专注于DJI大疆无人机的学习和创意项目。包含教程、3D模拟器、游戏和有趣的无人机相关项目。
+This repository is centered on a local DJI aerial-footage processing workflow.
+The main value is turning DJI videos and same-name `.SRT` telemetry files into
+structured reports, review frames, clips, scene lists, edit notes, and publish
+copy. The 3D simulator, game, and learning docs are secondary supporting demos.
+
+## Primary Workflow
+
+Default first-run demo:
+
+```bash
+python ai_video_processor.py --create-sample
+```
+
+Real footage workflow:
+
+```text
+videos/DJI_0001.MP4
+videos/DJI_0001.SRT
+        |
+        v
+ai_video_processor.py
+        |
+        v
+output/DJI_0001/analysis.json
+output/report.json
+```
+
+Use `--no-ai` for private metadata/frame/clip/SRT processing. Use `--with-ai`
+only after Ollama is running or a cloud API key has been configured locally.
 
 ## Directory Structure
 
-```
+```text
 dji/
-├── docs/                      # 文档目录
-│   ├── tutorials/             # 教程
-│   │   ├── beginner-guide.md  # 新手入门指南
-│   │   └── safety-guide.md    # 安全飞行指南
-│   ├── tips/                  # 飞行技巧
-│   │   └── flight-tips.md     # 实用飞行技巧
-│   └── ideas/                 # 创意灵感
-│       └── fun-projects.md    # 有趣项目创意
-├── simulation-simulator/      # Three.js无人机模拟器
-│   ├── index.html
-│   └── main.js
-├── games/                     # 游戏项目
-│   └── drone-game/            # 无人机躲避游戏
-│       ├── index.html
-│       └── main.js
-├── examples/                  # 代码示例
-│   └── python/                # Python示例
-│       └── drone_control.py   # 无人机控制示例
-├── AI_VIDEO_PROCESSOR.md      # AI视频处理说明
-├── DEVELOPMENT.md             # 开发和验证指南
-├── LICENSE                    # MIT许可证
-├── README.md                  # 项目主文档
-└── GEMINI.md                  # AI交互指南
+├── ai_video_processor.py                  # Main DJI footage processing workflow
+├── AI_VIDEO_PROCESSOR.md                  # Operator guide
+├── README.md                              # Product README
+├── DEVELOPMENT.md                         # Local development and validation guide
+├── docs/
+│   ├── skills/dji-footage-copilot/        # Reusable AI-agent skill
+│   ├── tutorials/                         # Learning and safety material
+│   ├── tips/
+│   └── ideas/
+├── examples/
+│   ├── sample-dji-srt/                    # Synthetic DJI-style SRT
+│   ├── sample-output/                     # Example report shape
+│   └── python/                            # Python drone-control example
+├── simulation-simulator/                  # Secondary Three.js demo
+├── games/drone-game/                      # Secondary Canvas demo
+├── index.html                             # GitHub Pages product demo
+└── requirements.txt
 ```
 
-## 已包含内容
+## AI Agent Guidelines
 
-### 教程 (docs/tutorials/)
-- **beginner-guide.md** - 新手入门：无人机类型、关键术语、首次飞行准备、基本操作
-- **safety-guide.md** - 安全飞行：法规要求、起飞前检查清单、紧急处理、天气限制
+- Treat DJI footage and SRT telemetry as private local data.
+- Do not commit `videos/`, `output/`, API keys, source media, generated clips, or private GPS data.
+- Prefer `python ai_video_processor.py --create-sample` before asking the user for real footage.
+- Prefer `--no-ai` for first validation, then `--with-ai` after the user chooses a backend.
+- Keep README, `AI_VIDEO_PROCESSOR.md`, `DEVELOPMENT.md`, and `docs/skills/dji-footage-copilot/SKILL.md` aligned when commands or outputs change.
+- The project should feel like a useful post-flight footage tool, not a generic drone tutorial site.
+- Simulator and game work should stay secondary unless the user explicitly changes the product direction.
 
-### 飞行技巧 (docs/tips/)
-- **flight-tips.md** - 航拍技巧、飞行技巧、设备优化、创意技巧
+## Validation Commands
 
-### 创意项目 (docs/ideas/)
-- **fun-projects.md** - 游戏与模拟、创意摄影、编程项目、实用项目、艺术创作等创意灵感
+```bash
+python -m py_compile ai_video_processor.py examples/python/drone_control.py
+git diff --check
+```
 
-### 3D模拟器 (simulation-simulator/)
-使用Three.js构建的3D无人机飞行模拟器，支持：
-- WASD/方向键控制飞行
-- 鼠标拖拽旋转视角
-- 实时遥测数据显示（高度、速度、位置、姿态）
-- 模拟建筑物和树木环境
+PowerShell sample validation:
 
-打开 `index.html` 即可体验。
-
-### AI视频处理工具
-- **ai_video_processor.py** - 使用 FFmpeg 提取帧和切片，并通过 Ollama、智谱 AI、OpenAI 或 Anthropic 分析航拍素材
-- **AI_VIDEO_PROCESSOR.md** - 安装、配置、运行和故障排除说明
-- `videos/` 和 `output/` 为本地素材和生成结果，不应提交到 Git
-
-### 无人机躲避游戏 (games/drone-game/)
-一个有趣的无人机躲避障碍物游戏，支持：
-- 方向键/WASD控制
-- 分数和等级系统
-- 多种障碍物类型（建筑物、小鸟、敌方无人机）
-- 3条生命值
-
-打开 `index.html` 开始游戏。
-
-### Python控制示例 (examples/python/)
-- **drone_control.py** - 无人机控制基类，支持起飞、降落、移动、旋转等操作
-- 包含路径规划辅助函数
-
-## AI Guidelines
-
-当与此项目交互时，AI agents应该：
-- 遵循现有目录结构
-- 重视安全，始终强调飞行安全
-- 帮助扩展教程、添加新示例或创建新项目
-- 保持代码简洁、可运行
-- 不要提交 API Key、原始视频素材或生成输出
+```powershell
+$demoVideoDir = Join-Path $env:TEMP "dji-demo-videos"
+$demoOutputDir = Join-Path $env:TEMP "dji-demo-output"
+python ai_video_processor.py --create-sample --video-dir $demoVideoDir --output-dir $demoOutputDir
+```

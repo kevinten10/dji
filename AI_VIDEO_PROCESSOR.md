@@ -73,6 +73,27 @@ $env:ANTHROPIC_API_KEY = "your_key"
 
 ## 基本使用
 
+### 没有素材：先跑内置 demo
+
+第一次使用推荐先跑 demo。脚本会生成一个小的 `DJI_SAMPLE.MP4` 和同名 `DJI_SAMPLE.SRT`，并在不调用 AI 的情况下跑完整工作流：
+
+```bash
+python ai_video_processor.py --create-sample
+```
+
+你会看到：
+
+```text
+videos/DJI_SAMPLE.MP4
+videos/DJI_SAMPLE.SRT
+output/DJI_SAMPLE/analysis.json
+output/report.json
+```
+
+这个 demo 只需要 FFmpeg/FFprobe，不需要 Ollama 或 API Key。
+
+### 有真实素材：放入 videos/
+
 把视频放进 `videos/`：
 
 ```text
@@ -85,7 +106,7 @@ videos/
 运行：
 
 ```bash
-python ai_video_processor.py
+python ai_video_processor.py --no-ai
 ```
 
 支持视频扩展名：
@@ -96,6 +117,12 @@ python ai_video_processor.py
 - `.mkv`
 
 脚本只扫描视频文件，同名 `.SRT` 会作为 sidecar 遥测文件自动读取。
+
+开启 AI 分析：
+
+```bash
+python ai_video_processor.py --with-ai
+```
 
 ## 推荐的首次本地测试
 
@@ -126,6 +153,21 @@ python ai_video_processor.py
 | `DJI_ENABLE_SCENE_DETECTION` | 是否运行 PySceneDetect | `false` |
 | `DJI_ENABLE_SCENE_CLIPS` | 是否为检测到的场景导出片段 | `false` |
 | `DJI_SCENE_THRESHOLD` | PySceneDetect 内容检测阈值 | `27.0` |
+
+等价 CLI 参数：
+
+| 参数 | 作用 |
+| --- | --- |
+| `--create-sample` | 生成并处理内置 demo 视频和 SRT |
+| `--video-dir <path>` | 指定输入目录 |
+| `--output-dir <path>` | 指定输出目录 |
+| `--no-ai` | 关闭 AI，只做本地整理 |
+| `--with-ai` | 启用 AI 分析 |
+| `--backend ollama` | 指定 AI 后端 |
+| `--frames 4` | 指定抽帧数量 |
+| `--clip-duration 8` | 指定固定切片秒数 |
+| `--scene-detect` | 启用 PySceneDetect |
+| `--scene-clips` | 可用时导出场景片段 |
 
 ## 输出结构
 
@@ -260,3 +302,10 @@ $env:DJI_ENABLE_AI_ANALYSIS = "0"
 ### output 和 videos 是否会提交到 GitHub
 
 不会。`videos/` 和 `output/` 是本地素材与生成物目录，已经在 `.gitignore` 中忽略。
+
+## 示例与 Skill
+
+- [examples/README.md](examples/README.md)：示例 SRT、示例报告和 demo 命令。
+- [examples/sample-dji-srt/DJI_SAMPLE.SRT](examples/sample-dji-srt/DJI_SAMPLE.SRT)：可读的 DJI 风格 SRT 样例。
+- [examples/sample-output/report.example.json](examples/sample-output/report.example.json)：批量报告输出结构样例。
+- [docs/skills/dji-footage-copilot/SKILL.md](docs/skills/dji-footage-copilot/SKILL.md)：给 Codex/AI 代理复用的项目 skill。

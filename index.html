@@ -374,9 +374,10 @@
                 <span>Footage Copilot</span>
             </a>
             <div class="nav-links">
+                <a href="#quickstart">开箱即用</a>
                 <a href="#workflow">处理流程</a>
                 <a href="#outputs">输出结构</a>
-                <a href="#experiments">附加实验</a>
+                <a href="#experiments">示例与实验</a>
                 <a href="AI_VIDEO_PROCESSOR.md">使用指南</a>
                 <a href="https://github.com/kevinten10/dji#readme">GitHub</a>
             </div>
@@ -392,7 +393,7 @@
                 <div class="actions">
                     <a class="button primary" href="AI_VIDEO_PROCESSOR.md">查看处理器指南</a>
                     <a class="button" href="https://github.com/kevinten10/dji#readme">打开 README</a>
-                    <a class="button" href="#experiments">附加实验</a>
+                    <a class="button" href="#experiments">示例与实验</a>
                 </div>
             </div>
 
@@ -408,7 +409,7 @@
                 <div class="processor">
                     <div class="processor-panel">
                         <h2>本地运行</h2>
-                        <code class="command">pip install -r requirements.txt<br>python ai_video_processor.py</code>
+                        <code class="command">pip install -r requirements.txt<br>python ai_video_processor.py --create-sample</code>
                     </div>
                     <div class="processor-panel">
                         <h3>生成内容</h3>
@@ -421,6 +422,37 @@
                 </div>
             </div>
         </div>
+
+        <section id="quickstart">
+            <div class="shell">
+                <div class="section-title">
+                    <h2>第一条命令就能看到结果</h2>
+                    <p>没有 DJI 真素材也能先跑通 demo：脚本会生成一个小视频和同名 SRT，默认关闭 AI，直接输出本地分析报告。</p>
+                </div>
+                <div class="workflow">
+                    <div class="stage">
+                        <small>STEP 1</small>
+                        <h3>安装依赖</h3>
+                        <p>安装 Python 包，并确保 FFmpeg/FFprobe 可在终端运行。</p>
+                    </div>
+                    <div class="stage">
+                        <small>STEP 2</small>
+                        <h3>生成样例</h3>
+                        <p><code>python ai_video_processor.py --create-sample</code></p>
+                    </div>
+                    <div class="stage">
+                        <small>STEP 3</small>
+                        <h3>查看输出</h3>
+                        <p>打开 <code>output/DJI_SAMPLE/analysis.json</code> 和 <code>output/report.json</code>。</p>
+                    </div>
+                    <div class="stage">
+                        <small>STEP 4</small>
+                        <h3>接入真素材</h3>
+                        <p>把真实 DJI 视频和同名 SRT 放入 <code>videos/</code>，先用 <code>--no-ai</code> 跑一遍。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section id="workflow">
             <div class="shell">
@@ -480,10 +512,18 @@
         <section id="experiments">
             <div class="shell">
                 <div class="section-title">
-                    <h2>附加实验</h2>
-                    <p>模拟器和小游戏保留为学习与展示入口，但它们不再是项目主价值；主线是航拍素材处理。</p>
+                    <h2>示例与附加实验</h2>
+                    <p>示例文件和项目 skill 帮助你快速理解输入输出；模拟器和小游戏保留为辅助展示。</p>
                 </div>
                 <div class="resource-grid">
+                    <a class="resource" href="examples/README.md">
+                        <h3>示例输入输出</h3>
+                        <p>包含 DJI 风格 SRT 样例和 report.json 输出样例，用来快速理解数据结构。</p>
+                    </a>
+                    <a class="resource" href="docs/skills/dji-footage-copilot/SKILL.md">
+                        <h3>项目 Skill</h3>
+                        <p>给 Codex、Gemini 或其他 AI 代理复用的处理流程、命令和安全规则。</p>
+                    </a>
                     <a class="resource" href="simulation-simulator/index.html">
                         <h3>3D 飞行模拟器</h3>
                         <p>Three.js 无人机场景，用于体验键盘控制、视角移动和飞行状态展示。</p>
@@ -491,10 +531,6 @@
                     <a class="resource" href="games/drone-game/index.html">
                         <h3>无人机躲避挑战</h3>
                         <p>Canvas 小游戏，用来练习方向控制和反应节奏，适合作为轻量互动演示。</p>
-                    </a>
-                    <a class="resource" href="docs/tutorials/safety-guide.md">
-                        <h3>安全飞行资料</h3>
-                        <p>保留飞行安全、合规和基础学习内容，作为真实航拍工作流的前置参考。</p>
                     </a>
                 </div>
             </div>

@@ -1,0 +1,67 @@
+{
+  "workflow_version": "3.0.0",
+  "processed_at": "2026-06-06T18:30:00",
+  "input_dir": "videos",
+  "output_dir": "output",
+  "ai_backend": "ollama",
+  "total_videos": 1,
+  "total_duration_seconds": 3.0,
+  "outputs": {
+    "report": "output/report.json",
+    "per_video_analysis": "output/<video_name>/analysis.json",
+    "frames": "output/<video_name>/frames",
+    "clips": "output/<video_name>/clips",
+    "scenes": "output/<video_name>/scenes.json"
+  },
+  "results": [
+    {
+      "workflow_version": "3.0.0",
+      "name": "DJI_SAMPLE",
+      "video": {
+        "duration_seconds": 3.0,
+        "duration_label": "00:03",
+        "width": 640,
+        "height": 360,
+        "codec": "h264",
+        "fps": 24.0,
+        "size_mb": 0.02
+      },
+      "telemetry": {
+        "exists": true,
+        "cue_count": 3,
+        "fields_detected": [
+          "absolute_altitude",
+          "gimbal_pitch",
+          "gimbal_yaw",
+          "iso",
+          "latitude",
+          "longitude",
+          "relative_altitude",
+          "shutter",
+          "speed"
+        ]
+      },
+      "frames": [
+        {
+          "index": 1,
+          "timestamp_label": "00:00",
+          "source": "uniform"
+        }
+      ],
+      "clips": [
+        {
+          "index": 0,
+          "source": "fixed_interval",
+          "duration_seconds": 3.0
+        }
+      ],
+      "publish_package": {
+        "recommended_formats": [
+          "YouTube/Bilibili 16:9",
+          "website hero background",
+          "client presentation B-roll"
+        ]
+      }
+    }
+  ]
+}

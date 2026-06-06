@@ -79,7 +79,19 @@ $env:DJI_ENABLE_SCENE_DETECTION = "0"
 Run:
 
 ```bash
-python ai_video_processor.py
+python ai_video_processor.py --create-sample
+```
+
+This creates a tiny local `videos/DJI_SAMPLE.MP4` and
+`videos/DJI_SAMPLE.SRT`, then writes `output/DJI_SAMPLE/analysis.json` and
+`output/report.json` without AI.
+
+Useful CLI shortcuts:
+
+```bash
+python ai_video_processor.py --no-ai --frames 4 --clip-duration 8
+python ai_video_processor.py --scene-detect --no-ai
+python ai_video_processor.py --with-ai --backend ollama
 ```
 
 ## Scene Detection
@@ -108,6 +120,14 @@ Before publishing changes, run:
 ```bash
 python -m py_compile ai_video_processor.py examples/python/drone_control.py
 git diff --check
+```
+
+PowerShell demo validation:
+
+```powershell
+$demoVideoDir = Join-Path $env:TEMP "dji-demo-videos"
+$demoOutputDir = Join-Path $env:TEMP "dji-demo-output"
+python ai_video_processor.py --create-sample --video-dir $demoVideoDir --output-dir $demoOutputDir
 ```
 
 Safe no-input test:
@@ -153,3 +173,9 @@ Current intended deployment shape:
 - Source: GitHub Pages from the active `codex/` branch root.
 - Demo URL: `http://kevinten.com/dji/`
 - Local processor: run on the user's machine, not on GitHub Pages.
+
+## Project Skill
+
+The reusable AI-agent workflow lives at
+`docs/skills/dji-footage-copilot/SKILL.md`. Keep it aligned with the README and
+`AI_VIDEO_PROCESSOR.md` whenever commands or output shapes change.

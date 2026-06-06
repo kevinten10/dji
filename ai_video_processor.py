@@ -9,6 +9,7 @@ PySceneDetect, parses same-name DJI SRT telemetry, and creates structured
 analysis reports for editing and publishing.
 """
 
+import argparse
 import base64
 import json
 import os
@@ -23,6 +24,18 @@ from tqdm import tqdm
 
 WORKFLOW_VERSION = "3.0.0"
 VIDEO_EXTENSIONS = (".mp4", ".mov", ".avi", ".mkv")
+SAMPLE_SRT_TEXT = """1
+00:00:00,000 --> 00:00:00,500
+FrameCnt: 1, DiffTime: 33ms [latitude: 31.123456] [longitude: 121.654321] [rel_alt: 86.5] [abs_alt: 120.2] [h_speed: 5.8] [gb_pitch: -12.3] [gb_yaw: 45.0] [iso: 100] [shutter: 1/120.0] [fnum: 280]
+
+2
+00:00:00,500 --> 00:00:01,000
+FrameCnt: 2, DiffTime: 33ms [latitude: 31.123556] [longitude: 121.654421] [rel_alt: 89.0] [abs_alt: 123.1] [h_speed: 6.2] [gb_pitch: -10.8] [gb_yaw: 47.5] [iso: 100] [shutter: 1/120.0] [fnum: 280]
+
+3
+00:00:01,000 --> 00:00:01,500
+FrameCnt: 3, DiffTime: 33ms [latitude: 31.123656] [longitude: 121.654521] [rel_alt: 92.4] [abs_alt: 126.3] [h_speed: 6.9] [gb_pitch: -9.5] [gb_yaw: 49.1] [iso: 100] [shutter: 1/120.0] [fnum: 280]
+"""
 
 CONFIG = {
     "ai_backend": "ollama",
@@ -110,6 +123,51 @@ def apply_env_config():
             CONFIG[config_key] = value
 
 
+def parse_args():
+    """Parse CLI flags for the common quick-start workflow."""
+    parser = argparse.ArgumentParser(
+        description="DJI Footage Copilot: local AI workflow for DJI aerial video processing."
+    )
+    parser.add_argument("--create-sample", action="store_true", help="Create a tiny demo MP4 + same-name DJI SRT and process it.")
+    parser.add_argument("--video-dir", help="Input directory for videos and same-name SRT files.")
+    parser.add_argument("--output-dir", help="Output directory for reports, frames, and clips.")
+    parser.add_argument("--backend", choices=["ollama", "zhipuai", "openai", "anthropic"], help="AI backend to use.")
+    parser.add_argument("--frames", type=int, help="Number of evenly spaced frames to extract per video.")
+    parser.add_argument("--clip-duration", type=int, help="Fixed clip duration in seconds.")
+    parser.add_argument("--scene-detect", action="store_true", help="Enable optional PySceneDetect scene detection.")
+    parser.add_argument("--scene-clips", action="store_true", help="Export scene clips when scene detection is available.")
+
+    ai_group = parser.add_mutually_exclusive_group()
+    ai_group.add_argument("--no-ai", action="store_true", help="Disable AI analysis for metadata/frame/clip-only runs.")
+    ai_group.add_argument("--with-ai", action="store_true", help="Force AI analysis on, useful after starting Ollama or configuring a cloud key.")
+    return parser.parse_args()
+
+
+def apply_cli_args(args):
+    """Apply CLI overrides after environment variables."""
+    if args.video_dir:
+        CONFIG["video_dir"] = args.video_dir
+    if args.output_dir:
+        CONFIG["output_dir"] = args.output_dir
+    if args.backend:
+        CONFIG["ai_backend"] = args.backend
+    if args.frames is not None:
+        CONFIG["num_frames"] = args.frames
+    if args.clip_duration is not None:
+        CONFIG["clip_duration"] = args.clip_duration
+    if args.scene_detect:
+        CONFIG["enable_scene_detection"] = True
+    if args.scene_clips:
+        CONFIG["enable_scene_detection"] = True
+        CONFIG["enable_scene_clips"] = True
+    if args.no_ai:
+        CONFIG["enable_ai_analysis"] = False
+    if args.with_ai:
+        CONFIG["enable_ai_analysis"] = True
+    if args.create_sample and not args.with_ai:
+        CONFIG["enable_ai_analysis"] = False
+
+
 def run_cmd(args, description=""):
     """Execute a command and return True when it exits successfully."""
     if description:
@@ -180,6 +238,45 @@ def scan_video_files(video_dir):
         if path.is_file() and path.suffix.lower() in VIDEO_EXTENSIONS:
             files.append(path)
     return sorted(files)
+
+
+def create_sample_assets(video_dir):
+    """Create a tiny generated MP4 and DJI-style SRT for first-run demos."""
+    video_dir = Path(video_dir)
+    video_dir.mkdir(parents=True, exist_ok=True)
+    video_path = video_dir / "DJI_SAMPLE.MP4"
+    srt_path = video_dir / "DJI_SAMPLE.SRT"
+
+    if not check_tool("ffmpeg"):
+        print("[!] FFmpeg is required to create the sample video.")
+        return False
+
+    ok = run_cmd(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "testsrc=size=640x360:rate=24",
+            "-t",
+            "3",
+            "-pix_fmt",
+            "yuv420p",
+            "-y",
+            str(video_path),
+        ],
+        f"Creating sample video at {video_path}",
+    )
+    if not ok:
+        return False
+
+    srt_path.write_text(SAMPLE_SRT_TEXT, encoding="utf-8")
+    print(f"[OK] Sample SRT saved to: {srt_path}")
+    print("[*] Demo mode disables AI by default. Add --with-ai after starting Ollama if you want vision analysis.")
+    return True
 
 
 def ffprobe_json(video_path):
@@ -973,7 +1070,9 @@ def build_empty_report(video_dir, reason):
 
 def main():
     """Main entry point."""
+    args = parse_args()
     apply_env_config()
+    apply_cli_args(args)
 
     print(
         """
@@ -991,6 +1090,10 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     video_dir = Path(CONFIG["video_dir"])
+    if args.create_sample:
+        if not create_sample_assets(video_dir):
+            return
+
     if not video_dir.exists():
         print(f"[!] Video directory not found: {video_dir}")
         report = build_empty_report(video_dir, "video directory not found")
@@ -1014,7 +1117,9 @@ def main():
         print("    Linux: sudo apt install ffmpeg")
         return
 
-    if CONFIG["ai_backend"] == "ollama":
+    if not CONFIG["enable_ai_analysis"]:
+        print("[*] AI analysis disabled. Metadata, telemetry, frames, clips, and reports will still be generated.")
+    elif CONFIG["ai_backend"] == "ollama":
         print("[*] Ollama selected. Start it with: ollama serve")
     elif CONFIG["ai_backend"] == "zhipuai" and not CONFIG["zhipu_api_key"]:
         print("[!] ZhipuAI selected but ZHIPUAI_API_KEY is not set.")

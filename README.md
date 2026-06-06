@@ -43,7 +43,27 @@ output/report.json
 frames/ clips/ scenes.json publish copy
 ```
 
-## 快速开始
+## 三步开箱即用
+
+没有真实 DJI 素材也可以先跑通完整流程。这个命令会生成一个很小的本地示例视频和同名 DJI 风格 SRT，然后输出 `analysis.json` 与 `report.json`；默认不调用 AI。
+
+```bash
+pip install -r requirements.txt
+python ai_video_processor.py --create-sample
+```
+
+生成后查看：
+
+```text
+videos/DJI_SAMPLE.MP4
+videos/DJI_SAMPLE.SRT
+output/DJI_SAMPLE/analysis.json
+output/report.json
+```
+
+`videos/` 和 `output/` 都是本地目录，已被 Git 忽略。
+
+## 处理真实 DJI 素材
 
 1. 安装 FFmpeg，并确保 `ffmpeg -version` 和 `ffprobe -version` 可运行。
 
@@ -64,12 +84,12 @@ ollama pull llava
 ollama serve
 ```
 
-4. 放入素材并运行。
+4. 放入素材并运行。没有启动 Ollama 时可以先用 `--no-ai` 跑元信息、遥测、抽帧和切片。
 
 ```bash
 mkdir videos
 # 把 DJI_0001.MP4 / DJI_0001.SRT 放入 videos/
-python ai_video_processor.py
+python ai_video_processor.py --no-ai
 ```
 
 支持 `.mp4`、`.mov`、`.avi`、`.mkv`，并会自动寻找同名 `.SRT` / `.srt` 作为 DJI 遥测文件。
@@ -119,6 +139,15 @@ output/
 
 云端 AI 后端需要自行在本机设置密钥；项目不会写入、提交或展示任何 API Key。
 
+常用命令也可以直接用 CLI 参数：
+
+```bash
+python ai_video_processor.py --create-sample
+python ai_video_processor.py --no-ai --frames 4 --clip-duration 8
+python ai_video_processor.py --scene-detect --no-ai
+python ai_video_processor.py --with-ai --backend ollama
+```
+
 ## 可选能力
 
 ### PySceneDetect
@@ -145,6 +174,8 @@ DJI_0001.SRT
 
 - [GitHub Pages 首页](http://kevinten.com/dji/)：展示新的“航拍视频处理工作台”定位。
 - [AI 视频处理主文档](AI_VIDEO_PROCESSOR.md)：完整命令、配置、输出结构和 FAQ。
+- [示例文件](examples/README.md)：包含 DJI 风格 SRT 样例和报告输出样例。
+- [项目 Skill](docs/skills/dji-footage-copilot/SKILL.md)：给 Codex/AI 代理复用的处理流程提示词。
 - [3D 飞行模拟器](simulation-simulator/index.html)：保留为附加学习实验。
 - [无人机躲避挑战](games/drone-game/index.html)：保留为附加互动演示。
 - [开发与验证指南](DEVELOPMENT.md)：本地验证、静态部署和发布检查。
