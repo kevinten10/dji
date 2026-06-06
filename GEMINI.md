@@ -16,10 +16,9 @@ dji/
 │   │   └── flight-tips.md     # 实用飞行技巧
 │   └── ideas/                 # 创意灵感
 │       └── fun-projects.md    # 有趣项目创意
-├── simulation/                # 3D模拟器
-│   └── drone-simulator/       # Three.js无人机模拟器
-│       ├── index.html
-│       └── main.js
+├── simulation-simulator/      # Three.js无人机模拟器
+│   ├── index.html
+│   └── main.js
 ├── games/                     # 游戏项目
 │   └── drone-game/            # 无人机躲避游戏
 │       ├── index.html
@@ -27,6 +26,9 @@ dji/
 ├── examples/                  # 代码示例
 │   └── python/                # Python示例
 │       └── drone_control.py   # 无人机控制示例
+├── AI_VIDEO_PROCESSOR.md      # AI视频处理说明
+├── DEVELOPMENT.md             # 开发和验证指南
+├── LICENSE                    # MIT许可证
 ├── README.md                  # 项目主文档
 └── GEMINI.md                  # AI交互指南
 ```
@@ -43,7 +45,7 @@ dji/
 ### 创意项目 (docs/ideas/)
 - **fun-projects.md** - 游戏与模拟、创意摄影、编程项目、实用项目、艺术创作等创意灵感
 
-### 3D模拟器 (simulation/drone-simulator/)
+### 3D模拟器 (simulation-simulator/)
 使用Three.js构建的3D无人机飞行模拟器，支持：
 - WASD/方向键控制飞行
 - 鼠标拖拽旋转视角
@@ -51,6 +53,11 @@ dji/
 - 模拟建筑物和树木环境
 
 打开 `index.html` 即可体验。
+
+### AI视频处理工具
+- **ai_video_processor.py** - 使用 FFmpeg 提取帧和切片，并通过 Ollama、智谱 AI、OpenAI 或 Anthropic 分析航拍素材
+- **AI_VIDEO_PROCESSOR.md** - 安装、配置、运行和故障排除说明
+- `videos/` 和 `output/` 为本地素材和生成结果，不应提交到 Git
 
 ### 无人机躲避游戏 (games/drone-game/)
 一个有趣的无人机躲避障碍物游戏，支持：
@@ -72,3 +79,4 @@ dji/
 - 重视安全，始终强调飞行安全
 - 帮助扩展教程、添加新示例或创建新项目
 - 保持代码简洁、可运行
+- 不要提交 API Key、原始视频素材或生成输出

@@ -7,55 +7,92 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #1a1a2e;
+            font-family: Inter, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            background: #071018;
             min-height: 100vh;
             overflow: hidden;
+            color: #eff9ff;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(126,231,255,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(126,231,255,0.035) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.72), transparent 80%);
+            z-index: 10;
         }
         #backBtn {
             position: fixed;
             top: 20px;
             left: 20px;
             z-index: 1000;
-            background: rgba(0,212,255,0.9);
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 25px;
+            background: linear-gradient(135deg, #2adfff, #38f8a5);
+            color: #031018;
+            padding: 11px 18px;
             text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.24);
             font-weight: bold;
             transition: all 0.2s;
+            box-shadow: 0 12px 34px rgba(42,223,255,0.22);
         }
-        #backBtn:hover { background: #00ff88; transform: scale(1.05); }
+        #backBtn:hover { transform: translateY(-2px); }
         #container { width: 100vw; height: 100vh; }
         #info {
             position: absolute; top: 70px; left: 20px;
-            background: rgba(0,0,0,0.8); color: #fff;
-            padding: 15px; border-radius: 12px; font-size: 13px;
+            background: rgba(7,16,24,0.84); color: #eff9ff;
+            border: 1px solid rgba(126,231,255,0.22);
+            padding: 16px; font-size: 13px;
             max-width: 260px; z-index: 100;
+            box-shadow: 0 18px 60px rgba(0,0,0,0.38);
+            backdrop-filter: blur(16px);
         }
-        #info h1 { font-size: 16px; margin-bottom: 10px; color: #00d4ff; }
-        #info p { margin-bottom: 6px; line-height: 1.4; }
+        #info h1 { font-size: 16px; margin-bottom: 12px; color: #2adfff; }
+        #info p { margin-bottom: 7px; line-height: 1.45; color: #bfd2dc; }
         #info .key {
-            display: inline-block; background: rgba(255,255,255,0.2);
-            padding: 2px 6px; border-radius: 3px; font-family: monospace;
+            display: inline-block;
+            min-width: 24px;
+            text-align: center;
+            margin-right: 3px;
+            background: rgba(42,223,255,0.12);
+            border: 1px solid rgba(42,223,255,0.22);
+            color: #eff9ff;
+            padding: 2px 6px;
+            font-family: "Courier New", monospace;
         }
         #telemetry {
             position: absolute; top: 70px; right: 20px;
-            background: rgba(0,0,0,0.8); color: #00ff88;
-            padding: 12px; border-radius: 12px;
+            background: rgba(7,16,24,0.84); color: #38f8a5;
+            border: 1px solid rgba(56,248,165,0.24);
+            padding: 14px 16px;
             font-family: 'Courier New', monospace; font-size: 12px; z-index: 100;
+            min-width: 190px;
+            box-shadow: 0 18px 60px rgba(0,0,0,0.38);
+            backdrop-filter: blur(16px);
         }
-        #telemetry div { margin: 4px 0; }
+        #telemetry div { margin: 5px 0; }
         #error {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-            background: rgba(255,0,0,0.3); padding: 30px; border-radius: 12px;
+            background: rgba(255,0,0,0.3); padding: 30px;
             color: #fff; text-align: center; display: none;
         }
         #error h2 { color: #ff6b6b; margin-bottom: 10px; }
+        @media (max-width: 760px) {
+            #info, #telemetry {
+                left: 14px;
+                right: 14px;
+                max-width: none;
+            }
+            #info { top: 72px; }
+            #telemetry { top: auto; bottom: 16px; }
+        }
     </style>
 </head>
 <body>
-    <a href="/" id="backBtn">← 返回首页</a>
+    <a href="../index.html" id="backBtn">← 返回首页</a>
     <div id="container"></div>
     
     <div id="info">
@@ -71,6 +108,8 @@
     <div id="telemetry">
         <div>高度: <span id="altitude">0.0</span> m</div>
         <div>速度: <span id="speed">0.0</span> m/s</div>
+        <div>位置: <span id="position">0.0, 5.0, 0.0</span></div>
+        <div>姿态: <span id="attitude">0°, 0°, 0°</span></div>
     </div>
     
     <div id="error">

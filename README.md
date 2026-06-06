@@ -8,6 +8,28 @@
 
 ---
 
+## 🚀 项目演示与快速开始
+
+这是一个静态可部署的 DJI 无人机学习项目，包含教程、浏览器飞行模拟、小游戏和 AI 航拍视频处理工作流。
+
+| 入口 | 说明 |
+|------|------|
+| [在线演示](http://kevinten.com/dji/) | GitHub Pages 静态站点入口 |
+| [3D 飞行模拟器](simulation-simulator/index.html) | Three.js 无人机场景，支持 WASD、方向键和鼠标视角 |
+| [无人机躲避挑战](games/drone-game/index.html) | Canvas 小游戏，练习方向控制和反应节奏 |
+| [AI 视频处理工具](AI_VIDEO_PROCESSOR.md) | FFmpeg + Ollama/智谱/OpenAI/Anthropic 的航拍分析工作流 |
+| [开发与部署说明](DEVELOPMENT.md) | 本地运行、验证、部署和发布准备 |
+
+本地预览：
+
+```bash
+python -m http.server 8000
+```
+
+然后打开 `http://localhost:8000/`。
+
+---
+
 ## 📸 航拍作品展示
 
 在开始学习之前，先欣赏一下无人机能为你捕捉的震撼画面：
@@ -1925,23 +1947,55 @@ AI 自动方式：
 
 ```
 dji/
+├── 🏠 index.html                    # 静态首页入口
+│
 ├── 📖 docs/                        # 教程文档
 │   ├── tutorials/
 │   │   ├── beginner-guide.md       # 新手入门详解
 │   │   └── safety-guide.md         # 安全飞行完全指南
-│   └── tips/
-│       └── flight-tips.md          # 实用飞行技巧
+│   ├── tips/
+│   │   └── flight-tips.md          # 实用飞行技巧
+│   └── ideas/
+│       └── fun-projects.md         # AI+无人机创意玩法
 │
 ├── 🎮 games/                       # 互动体验
 │   └── drone-game/
+│       ├── index.html
+│       └── main.js
 │
-├── 🔬 simulation/                  # 飞行模拟
-│   └── drone-simulator/
+├── 🔬 simulation-simulator/        # Three.js 飞行模拟
+│   ├── index.html
+│   └── main.js
 │
-└── 💻 examples/                    # 编程示例
-    └── python/
-        └── drone_control.py        # Python 控制示例
+├── 💻 examples/                    # 编程示例
+│   └── python/
+│       └── drone_control.py        # Python 控制示例
+│
+├── 🎬 ai_video_processor.py        # AI 航拍视频处理工具
+├── 📘 AI_VIDEO_PROCESSOR.md        # 视频处理器使用说明
+├── 🛠️ DEVELOPMENT.md               # 本地运行、验证和部署说明
+└── 📄 LICENSE                      # MIT 许可证
 ```
+
+---
+
+## 🛠️ 本地运行与开发
+
+静态页面无需构建，仓库根目录启动一个简单 HTTP 服务即可：
+
+```bash
+python -m http.server 8000
+```
+
+然后访问：
+
+- 首页：`http://localhost:8000/`
+- 3D 模拟器：`http://localhost:8000/simulation-simulator/`
+- 躲避游戏：`http://localhost:8000/games/drone-game/`
+
+AI 视频处理工具的安装、后端配置和常见问题见 [AI_VIDEO_PROCESSOR.md](AI_VIDEO_PROCESSOR.md)。开发验证清单见 [DEVELOPMENT.md](DEVELOPMENT.md)。
+
+`videos/` 和 `output/` 是本地素材与生成结果，已加入 `.gitignore`，默认不提交到 GitHub。
 
 ---
 
@@ -1960,7 +2014,7 @@ dji/
 
 ## 📝 许可证
 
-MIT License - 欢迎 fork、star 和贡献！
+MIT License - 欢迎 fork、star 和贡献！详见 [LICENSE](LICENSE)。
 
 ---
 

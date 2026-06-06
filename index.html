@@ -3,73 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DJI 无人机项目</title>
+    <title>DJI 无人机学习与创意实验室</title>
     <style>
+        :root {
+            --bg: #071018;
+            --panel: rgba(9, 23, 34, 0.78);
+            --panel-strong: rgba(12, 31, 45, 0.92);
+            --line: rgba(126, 231, 255, 0.22);
+            --text: #eff9ff;
+            --muted: #8aa1ad;
+            --cyan: #2adfff;
+            --green: #38f8a5;
+            --amber: #ffd166;
+            --danger: #ff6b7a;
+            --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
-            color: #fff;
+            font-family: Inter, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 22% 16%, rgba(42, 223, 255, 0.16), transparent 30%),
+                radial-gradient(circle at 82% 8%, rgba(56, 248, 165, 0.12), transparent 28%),
+                linear-gradient(145deg, #071018 0%, #0c1b29 46%, #071018 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(126, 231, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(126, 231, 255, 0.035) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent 82%);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .shell {
+            width: min(1160px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid rgba(126, 231, 255, 0.12);
+            background: rgba(7, 16, 24, 0.78);
+            backdrop-filter: blur(18px);
+        }
+
+        .nav {
+            min-height: 72px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            justify-content: space-between;
+            gap: 18px;
         }
-        h1 { font-size: 48px; margin-bottom: 10px; color: #00d4ff; }
-        .subtitle { color: #888; font-size: 18px; margin-bottom: 40px; }
-        .links {
+
+        .brand {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 500px;
-            width: 100%;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            letter-spacing: 0;
         }
-        .card {
-            background: rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 16px;
-            text-decoration: none;
-            color: #fff;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid rgba(255,255,255,0.1);
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(42, 223, 255, 0.32);
+            background: linear-gradient(135deg, rgba(42, 223, 255, 0.18), rgba(56, 248, 165, 0.12));
+            box-shadow: 0 0 30px rgba(42, 223, 255, 0.16);
         }
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,212,255,0.3);
-        }
-        .card h2 { font-size: 24px; margin-bottom: 10px; color: #00ff88; }
-        .card p { color: #aaa; font-size: 14px; }
-        .emoji { font-size: 40px; margin-bottom: 15px; }
-        .github-link {
-            margin-top: 40px;
-            color: #888;
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: var(--muted);
             font-size: 14px;
         }
-        .github-link a { color: #00d4ff; text-decoration: none; }
-        .github-link a:hover { text-decoration: underline; }
+
+        .nav-links a:hover { color: var(--cyan); }
+
+        .hero {
+            min-height: calc(100vh - 220px);
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+            align-items: center;
+            gap: 56px;
+            padding: 38px 0 26px;
+        }
+
+        .hero-copy h1 {
+            max-width: 760px;
+            font-size: clamp(38px, 5.8vw, 70px);
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .hero-copy p {
+            max-width: 640px;
+            margin-top: 24px;
+            color: #b7c9d2;
+            font-size: 18px;
+            line-height: 1.75;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 34px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            padding: 0 20px;
+            border: 1px solid rgba(126, 231, 255, 0.28);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 700;
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        .button.primary {
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--cyan), var(--green));
+            color: #031018;
+            box-shadow: 0 16px 42px rgba(42, 223, 255, 0.22);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            border-color: rgba(42, 223, 255, 0.6);
+            background: rgba(42, 223, 255, 0.09);
+        }
+
+        .button.primary:hover { background: linear-gradient(135deg, #73edff, #66ffc0); }
+
+        .flight-console {
+            position: relative;
+            min-height: 450px;
+            border: 1px solid var(--line);
+            background:
+                linear-gradient(180deg, rgba(9, 23, 34, 0.8), rgba(7, 16, 24, 0.92)),
+                radial-gradient(circle at 50% 35%, rgba(42, 223, 255, 0.12), transparent 45%);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .flight-console::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(115deg, transparent 0 36%, rgba(42, 223, 255, 0.1) 36% 37%, transparent 37%),
+                linear-gradient(245deg, transparent 0 48%, rgba(56, 248, 165, 0.08) 48% 49%, transparent 49%);
+        }
+
+        .radar {
+            position: absolute;
+            inset: 64px 38px 138px;
+            border: 1px solid rgba(126, 231, 255, 0.18);
+            background:
+                linear-gradient(rgba(126, 231, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(126, 231, 255, 0.05) 1px, transparent 1px);
+            background-size: 42px 42px;
+        }
+
+        .flight-path {
+            position: absolute;
+            left: 16%;
+            top: 56%;
+            width: 68%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), var(--green), transparent);
+            transform: rotate(-18deg);
+            box-shadow: 0 0 20px rgba(42, 223, 255, 0.55);
+        }
+
+        .drone-dot {
+            position: absolute;
+            left: 47%;
+            top: 38%;
+            width: 72px;
+            height: 72px;
+            border: 1px solid rgba(42, 223, 255, 0.5);
+            display: grid;
+            place-items: center;
+            color: var(--cyan);
+            font-size: 36px;
+            box-shadow: 0 0 46px rgba(42, 223, 255, 0.28);
+            animation: float 3.8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .readout {
+            position: absolute;
+            left: 28px;
+            right: 28px;
+            bottom: 28px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            border: 1px solid rgba(126, 231, 255, 0.18);
+            background: rgba(0, 0, 0, 0.22);
+            padding: 16px;
+        }
+
+        .metric span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .metric strong {
+            font-family: "Courier New", monospace;
+            color: var(--green);
+            font-size: 20px;
+        }
+
+        section {
+            padding: 56px 0;
+            border-top: 1px solid rgba(126, 231, 255, 0.08);
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(28px, 4vw, 44px);
+            line-height: 1.08;
+        }
+
+        .section-title p {
+            max-width: 440px;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .demo-card, .resource {
+            position: relative;
+            min-height: 280px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            overflow: hidden;
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        .demo-card:hover, .resource:hover {
+            transform: translateY(-4px);
+            border-color: rgba(42, 223, 255, 0.62);
+            background: var(--panel-strong);
+        }
+
+        .demo-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 28px;
+        }
+
+        .demo-card::after {
+            content: "";
+            position: absolute;
+            inset: auto -20% -35% 30%;
+            height: 180px;
+            background: radial-gradient(circle, rgba(42, 223, 255, 0.22), transparent 60%);
+            pointer-events: none;
+        }
+
+        .demo-icon {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            background: rgba(42, 223, 255, 0.1);
+            border: 1px solid rgba(42, 223, 255, 0.22);
+            color: var(--cyan);
+            font-size: 28px;
+        }
+
+        .demo-card h3 {
+            margin-top: 22px;
+            font-size: 28px;
+        }
+
+        .demo-card p {
+            margin-top: 12px;
+            color: #aebfc8;
+            line-height: 1.7;
+        }
+
+        .demo-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .demo-meta span {
+            border: 1px solid rgba(126, 231, 255, 0.16);
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr 0.9fr;
+            gap: 18px;
+        }
+
+        .resource {
+            min-height: 210px;
+            padding: 24px;
+        }
+
+        .resource h3 {
+            color: var(--green);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .resource p {
+            color: #aebfc8;
+            line-height: 1.7;
+        }
+
+        .resource small {
+            display: block;
+            margin-top: 22px;
+            color: var(--muted);
+            font-family: "Courier New", monospace;
+        }
+
+        footer {
+            padding: 32px 0 46px;
+            color: var(--muted);
+            border-top: 1px solid rgba(126, 231, 255, 0.08);
+        }
+
+        @media (max-width: 860px) {
+            .shell { width: min(100% - 28px, 680px); }
+            .nav { align-items: flex-start; flex-direction: column; padding: 16px 0; }
+            .nav-links { flex-wrap: wrap; }
+            .hero { grid-template-columns: 1fr; padding-top: 42px; }
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .button { width: 100%; }
+            .flight-console { min-height: 430px; }
+            .demo-grid, .resource-grid { grid-template-columns: 1fr; }
+            .section-title { align-items: flex-start; flex-direction: column; }
+            .readout { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="emoji">🚁</div>
-    <h1>DJI 无人机项目</h1>
-    <p class="subtitle">探索无人机的无限可能！</p>
-    
-    <div class="links">
-        <a href="simulation-simulator/index.html" class="card">
-            <h2>🎮 3D无人机模拟器</h2>
-            <p>在浏览器中体验真实飞行！支持WASD控制、鼠标旋转视角</p>
-        </a>
-        
-        <a href="games/drone-game/index.html" class="card">
-            <h2>🚀 无人机躲避游戏</h2>
-            <p>操控无人机躲避障碍物，看你能飞多远！</p>
-        </a>
-    </div>
-    
-    <p class="github-link">
-        📚 完整文档：<a href="https://github.com/kevinten10/dji#readme">GitHub README</a>
-    </p>
+    <header>
+        <nav class="shell nav">
+            <a class="brand" href="#">
+                <span class="brand-mark">🚁</span>
+                <span>DJI Lab</span>
+            </a>
+            <div class="nav-links">
+                <a href="#demos">互动演示</a>
+                <a href="#resources">学习资源</a>
+                <a href="AI_VIDEO_PROCESSOR.md">AI 视频处理</a>
+                <a href="https://github.com/kevinten10/dji#readme">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="shell hero">
+            <div class="hero-copy">
+                <h1>DJI 无人机学习与创意实验室</h1>
+                <p>把无人机入门教程、飞行安全清单、3D 模拟练习、小游戏挑战和 AI 航拍视频处理整合到一个轻量静态项目里。打开浏览器，就能开始练习和探索。</p>
+                <div class="actions">
+                    <a class="button primary" href="simulation-simulator/index.html">进入 3D 模拟器</a>
+                    <a class="button" href="games/drone-game/index.html">试玩躲避挑战</a>
+                    <a class="button" href="#resources">查看文档路线</a>
+                </div>
+            </div>
+
+            <div class="flight-console" aria-label="飞行控制台装饰预览">
+                <div class="radar"></div>
+                <div class="flight-path"></div>
+                <div class="drone-dot">⌁</div>
+                <div class="readout">
+                    <div class="metric"><span>ALTITUDE</span><strong>120 m</strong></div>
+                    <div class="metric"><span>LINK</span><strong>98%</strong></div>
+                    <div class="metric"><span>MODE</span><strong>LEARN</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <section id="demos">
+            <div class="shell">
+                <div class="section-title">
+                    <h2>两个可以直接玩的演示</h2>
+                    <p>保留项目的静态部署优势，同时把第一屏做成真正的演示入口，而不是只放几个链接。</p>
+                </div>
+
+                <div class="demo-grid">
+                    <a class="demo-card" href="simulation-simulator/index.html">
+                        <div>
+                            <div class="demo-icon">3D</div>
+                            <h3>3D 飞行模拟器</h3>
+                            <p>基于 Three.js 的无人机场景，支持 WASD、方向键、鼠标视角和实时遥测。</p>
+                        </div>
+                        <div class="demo-meta">
+                            <span>Three.js</span>
+                            <span>实时高度</span>
+                            <span>飞行姿态</span>
+                        </div>
+                    </a>
+
+                    <a class="demo-card" href="games/drone-game/index.html">
+                        <div>
+                            <div class="demo-icon">GO</div>
+                            <h3>无人机躲避挑战</h3>
+                            <p>Canvas 小游戏，练习方向控制和反应节奏，包含分数、等级和生命状态。</p>
+                        </div>
+                        <div class="demo-meta">
+                            <span>Canvas</span>
+                            <span>键盘控制</span>
+                            <span>即时反馈</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources">
+            <div class="shell">
+                <div class="section-title">
+                    <h2>从学习到创作的完整路线</h2>
+                    <p>README 是主线，AI 视频处理器和安全指南是落地工具，适合继续扩展成课程型项目。</p>
+                </div>
+
+                <div class="resource-grid">
+                    <a class="resource" href="https://github.com/kevinten10/dji#readme">
+                        <h3>完整学习指南</h3>
+                        <p>选型、法规、安全、航拍参数、构图、航线规划、后期制作和 FAQ。</p>
+                        <small>README.md</small>
+                    </a>
+                    <a class="resource" href="AI_VIDEO_PROCESSOR.md">
+                        <h3>AI 航拍视频处理</h3>
+                        <p>本地提帧、切片、调用 Ollama/智谱/OpenAI/Anthropic 生成画面分析和文案。</p>
+                        <small>ai_video_processor.py</small>
+                    </a>
+                    <a class="resource" href="docs/tutorials/safety-guide.md">
+                        <h3>安全飞行清单</h3>
+                        <p>起飞前检查、空域查询、天气限制、应急处理和合规提醒。</p>
+                        <small>docs/tutorials</small>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="shell">MIT License · 静态部署友好 · 安全飞行，合法飞行</div>
+    </footer>
 </body>
 </html>

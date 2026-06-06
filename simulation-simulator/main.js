@@ -1,9 +1,6 @@
 // DJI 3D无人机模拟器
 // 使用Three.js构建的3D无人机飞行模拟器
 
-// DJI 3D无人机模拟器
-// 使用Three.js构建的3D无人机飞行模拟器
-
 let scene, camera, renderer, controls;
 let drone, droneGroup;
 let propellers = [];
@@ -29,8 +26,8 @@ const keys = {
 function init() {
     // 创建场景
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a1a2e);
-    scene.fog = new THREE.Fog(0x1a1a2e, 50, 200);
+    scene.background = new THREE.Color(0x071018);
+    scene.fog = new THREE.Fog(0x071018, 45, 180);
 
     // 创建相机
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -98,7 +95,7 @@ function createGround() {
     // 主地面
     const groundGeometry = new THREE.PlaneGeometry(200, 200);
     const groundMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x2a2a4a,
+        color: 0x101f2f,
         roughness: 0.8,
         metalness: 0.2
     });
@@ -108,7 +105,7 @@ function createGround() {
     scene.add(ground);
 
     // 网格辅助线
-    gridHelper = new THREE.GridHelper(200, 50, 0x00d4ff, 0x333366);
+    gridHelper = new THREE.GridHelper(200, 50, 0x2adfff, 0x1b3f54);
     gridHelper.position.y = 0.01;
     scene.add(gridHelper);
 }
@@ -119,7 +116,7 @@ function createDrone() {
     // 机身
     const bodyGeometry = new THREE.BoxGeometry(1.5, 0.4, 1.5);
     const bodyMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x333344,
+        color: 0x243344,
         metalness: 0.8,
         roughness: 0.3
     });
@@ -129,7 +126,7 @@ function createDrone() {
 
     // 机臂
     const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 1.2);
-    const armMaterial = new THREE.MeshStandardMaterial({ color: 0x222233 });
+    const armMaterial = new THREE.MeshStandardMaterial({ color: 0x111d29 });
     
     const armPositions = [
         { x: 0.8, z: 0.8, rotZ: Math.PI / 4 },
@@ -149,7 +146,7 @@ function createDrone() {
     // 螺旋桨
     const propellerGeometry = new THREE.BoxGeometry(0.8, 0.02, 0.1);
     const propellerMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x00d4ff,
+        color: 0x2adfff,
         transparent: true,
         opacity: 0.7
     });
@@ -186,7 +183,7 @@ function createDrone() {
 
     // 相机镜头
     const lensGeometry = new THREE.CylinderGeometry(0.08, 0.1, 0.1);
-    const lensMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff88, emissive: 0x003322 });
+    const lensMaterial = new THREE.MeshStandardMaterial({ color: 0x38f8a5, emissive: 0x003322 });
     const lens = new THREE.Mesh(lensGeometry, lensMaterial);
     lens.rotation.x = Math.PI / 2;
     lens.position.set(0, -0.3, 0.4);
@@ -212,7 +209,7 @@ function createEnvironment() {
     // 创建一些随机的建筑物/障碍物
     const buildingGeometry = new THREE.BoxGeometry(1, 1, 1);
     const buildingMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x4444aa,
+        color: 0x35516b,
         transparent: true,
         opacity: 0.8
     });
@@ -233,7 +230,7 @@ function createEnvironment() {
 
     // 添加一些树
     const treeGeometry = new THREE.ConeGeometry(1, 3);
-    const treeMaterial = new THREE.MeshStandardMaterial({ color: 0x226622 });
+    const treeMaterial = new THREE.MeshStandardMaterial({ color: 0x1b7f50 });
 
     for (let i = 0; i < 20; i++) {
         const tree = new THREE.Mesh(treeGeometry, treeMaterial);
@@ -258,7 +255,7 @@ function createEnvironment() {
         scene.add(pole);
 
         const lightGeometry = new THREE.SphereGeometry(0.3);
-        const lightMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const lightMaterial = new THREE.MeshBasicMaterial({ color: 0xffd166 });
         const light = new THREE.Mesh(lightGeometry, lightMaterial);
         light.position.set(Math.cos(angle) * radius, 5, Math.sin(angle) * radius);
         scene.add(light);

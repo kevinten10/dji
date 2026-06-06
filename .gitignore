@@ -1,0 +1,36 @@
+# Git
+.git/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+*.temp
+.vercel
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Local media and generated video-processing output
+videos/
+output/
+
+# Local secrets
+.env
+.env.*

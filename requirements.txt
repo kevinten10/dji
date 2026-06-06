@@ -1,8 +1,11 @@
-# AI 视频处理依赖
-zhipuai>=2.0.0
+# AI Video Processor Dependencies
 opencv-python>=4.8.0
-tqdm>=4.66.0
 Pillow>=10.0.0
+tqdm>=4.66.0
+requests>=2.31.0
+chardet>=3.0.2,<6.0.0  # Keep requests quiet if chardet is installed
 
-# 可选：语音处理
-# whisper>=1.0.0  # 需要 ffmpeg 和 CUDA 支持
+# Optional AI SDKs (uncomment as needed)
+# zhipuai>=2.0.0          # For ZhipuAI GLM-4V
+# openai>=1.0.0           # For OpenAI GPT-4o
+# anthropic>=0.18.0       # For Anthropic Claude
