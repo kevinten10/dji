@@ -1,19 +1,20 @@
-# DJI 无人机视频 AI 全自动处理工具
+# DJI Footage Copilot 使用指南
 
-本工具基于 **FFmpeg + Python + 多 AI 视觉后端**，用于本地批量处理航拍视频：提取关键帧、自动切分片段、调用 AI 分析画面，并生成标题、文案、标签和音乐氛围建议。
+这是本项目的主功能文档。`ai_video_processor.py` 面向 DJI 航拍素材的本地处理：扫描视频、读取元信息、解析同名 SRT 遥测、抽取关键帧、生成预切片、可选场景检测、调用 AI 视觉后端，并输出剪辑与发布建议。
 
-## 功能特点
+## 你能得到什么
 
-- **多 AI 后端**：默认使用本地 Ollama/LLaVA，也可切换智谱 AI、OpenAI、Anthropic。
-- **视频信息读取**：通过 FFprobe 获取时长、尺寸、编码和分辨率。
-- **关键帧提取**：按视频时长均匀抽取帧图片，用于视觉分析。
-- **自动切片**：按固定时长将原始视频拆分为多个片段。
-- **AI 文案生成**：基于帧分析生成中文标题、描述、标签和音乐风格建议。
-- **批量处理**：自动扫描 `videos/` 下的视频文件并输出结构化报告。
+- `analysis.json`：单条视频的完整结构化分析。
+- `report.json`：批量处理总报告。
+- `frames/`：用于人工筛片和 AI 分析的均匀关键帧。
+- `clips/`：固定秒数预切片，可选场景切片。
+- `scenes.json`：启用 PySceneDetect 后的场景边界列表。
+- `publish_package`：推荐发布格式、剪辑注意点、标签方向。
+- `generated_script`：AI 生成的标题、描述、标签、音乐氛围和剪辑计划。
 
 ## 安装
 
-### 1. 安装 FFmpeg
+### 1. FFmpeg
 
 Windows:
 
@@ -33,162 +34,229 @@ Linux:
 sudo apt install ffmpeg
 ```
 
-### 2. 安装 Python 依赖
+安装后确认：
+
+```bash
+ffmpeg -version
+ffprobe -version
+```
+
+### 2. Python 依赖
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. 选择 AI 后端
+### 3. AI 后端
 
-默认后端是 `ollama`，不需要 API Key，但需要本机安装并启动 Ollama：
+默认是本地 Ollama，不需要 API Key：
 
 ```bash
 ollama pull llava
 ollama serve
 ```
 
-也可以通过环境变量切换云端后端：
-
-```bash
-# 智谱 AI
-set DJI_AI_BACKEND=zhipuai
-set ZHIPUAI_API_KEY=你的密钥
-
-# OpenAI
-set DJI_AI_BACKEND=openai
-set OPENAI_API_KEY=你的密钥
-
-# Anthropic
-set DJI_AI_BACKEND=anthropic
-set ANTHROPIC_API_KEY=你的密钥
-```
-
-PowerShell 可使用：
+可选云端后端：
 
 ```powershell
-$env:DJI_AI_BACKEND = "ollama"
+$env:DJI_AI_BACKEND = "zhipuai"
+$env:ZHIPUAI_API_KEY = "your_key"
+
+$env:DJI_AI_BACKEND = "openai"
+$env:OPENAI_API_KEY = "your_key"
+
+$env:DJI_AI_BACKEND = "anthropic"
+$env:ANTHROPIC_API_KEY = "your_key"
 ```
 
-## 使用方法
+密钥只通过本机环境变量读取，不要写入仓库。
 
-将本地视频放入 `videos/`，然后运行：
+## 基本使用
+
+把视频放进 `videos/`：
+
+```text
+videos/
+├── DJI_0001.MP4
+├── DJI_0001.SRT
+└── DJI_0002.MOV
+```
+
+运行：
 
 ```bash
 python ai_video_processor.py
 ```
 
-支持的视频扩展名包括：
+支持视频扩展名：
 
 - `.mp4`
 - `.mov`
 - `.avi`
 - `.mkv`
 
-## 配置
+脚本只扫描视频文件，同名 `.SRT` 会作为 sidecar 遥测文件自动读取。
 
-可以编辑脚本中的 `CONFIG`，也可以用环境变量覆盖常用配置：
+## 推荐的首次本地测试
 
-| 环境变量 | 含义 | 默认值 |
+如果还没有真实素材，可以先测试安全路径：
+
+```powershell
+$env:DJI_VIDEO_DIR = "$env:TEMP\dji-empty-videos"
+$env:DJI_OUTPUT_DIR = "$env:TEMP\dji-empty-output"
+$env:DJI_ENABLE_AI_ANALYSIS = "0"
+python ai_video_processor.py
+```
+
+没有素材时脚本会写出一个空的 `report.json`，不会报错退出。
+
+## 配置项
+
+| 环境变量 | 作用 | 默认值 |
 | --- | --- | --- |
+| `DJI_VIDEO_DIR` | 输入视频目录 | `./videos` |
+| `DJI_OUTPUT_DIR` | 输出目录 | `./output` |
 | `DJI_AI_BACKEND` | AI 后端：`ollama`、`zhipuai`、`openai`、`anthropic` | `ollama` |
 | `DJI_OLLAMA_URL` | Ollama 服务地址 | `http://localhost:11434` |
 | `DJI_OLLAMA_MODEL` | Ollama 视觉模型 | `llava` |
-| `DJI_VIDEO_DIR` | 输入视频目录 | `./videos` |
-| `DJI_OUTPUT_DIR` | 输出目录 | `./output` |
-| `DJI_NUM_FRAMES` | 每个视频提取帧数 | `6` |
-| `DJI_CLIP_DURATION` | 切片时长，单位秒 | `5` |
-| `DJI_QUALITY` | FFmpeg 质量参数，数值越低质量越高 | `23` |
+| `DJI_NUM_FRAMES` | 每个视频均匀抽帧数量 | `6` |
+| `DJI_CLIP_DURATION` | 固定切片时长，单位秒 | `5` |
+| `DJI_ENABLE_AI_ANALYSIS` | 是否调用 AI 分析帧 | `true` |
+| `DJI_ENABLE_AUTO_EDIT` | 是否生成预切片 | `true` |
+| `DJI_ENABLE_SCENE_DETECTION` | 是否运行 PySceneDetect | `false` |
+| `DJI_ENABLE_SCENE_CLIPS` | 是否为检测到的场景导出片段 | `false` |
+| `DJI_SCENE_THRESHOLD` | PySceneDetect 内容检测阈值 | `27.0` |
 
-## 处理流程
-
-```text
-videos/*.MP4
-    |
-    v
-FFprobe 读取视频信息
-    |
-    v
-FFmpeg 均匀提取关键帧
-    |
-    v
-AI 后端逐帧分析画面
-    |
-    v
-AI 生成标题、描述、标签、音乐建议
-    |
-    v
-FFmpeg 切分视频片段
-    |
-    v
-output/<video_name>/analysis.json
-output/<video_name>/frames/
-output/<video_name>/clips/
-output/report.json
-```
-
-## 输出内容
+## 输出结构
 
 ```text
 output/
-├── DJI_0392/
-│   ├── frames/
-│   │   ├── frame_001.jpg
-│   │   └── ...
-│   ├── clips/
-│   │   ├── clip_000.mp4
-│   │   └── ...
-│   └── analysis.json
-├── DJI_0405/
-│   └── ...
-└── report.json
+├── report.json
+└── DJI_0001/
+    ├── analysis.json
+    ├── scenes.json
+    ├── frames/
+    │   ├── frame_001.jpg
+    │   └── ...
+    └── clips/
+        ├── clip_000.mp4
+        ├── clip_001.mp4
+        └── scenes/
+            └── scene_001.mp4
 ```
 
-`videos/` 和 `output/` 是本地素材与生成结果，已加入 `.gitignore`，避免误提交大文件。
+### `analysis.json` 关键字段
+
+```json
+{
+  "workflow_version": "3.0.0",
+  "video": {
+    "duration_seconds": 52.4,
+    "width": 3840,
+    "height": 2160,
+    "codec": "hevc",
+    "fps": 29.97,
+    "size_mb": 812.31
+  },
+  "telemetry": {
+    "exists": true,
+    "cue_count": 1200,
+    "fields_detected": ["latitude", "longitude", "relative_altitude", "gimbal_pitch"],
+    "stats": {}
+  },
+  "scene_detection": {
+    "enabled": false,
+    "available": false,
+    "scenes": []
+  },
+  "publish_package": {
+    "recommended_formats": ["YouTube/Bilibili 16:9", "website hero background"],
+    "editing_notes": []
+  }
+}
+```
+
+## DJI SRT 遥测
+
+脚本会寻找与视频同名的 `.SRT`、`.srt` 或 `.Srt`：
+
+```text
+DJI_0420.MP4
+DJI_0420.SRT
+```
+
+解析器会尽量提取：
+
+- `latitude` / `longitude`
+- `relative_altitude` / `absolute_altitude` / `altitude`
+- `speed`
+- `gimbal_pitch` / `gimbal_yaw` / `gimbal_roll`
+- `iso` / `shutter` / `f_number` / `ev`
+- `color_temperature` / `focal_length`
+
+不同 DJI 机型和 App 版本的 SRT 文本格式可能不同，所以当前实现保留 `samples[].text` 原文片段，并把解析逻辑集中在 `DJI_SRT_FIELD_PATTERNS`，方便继续扩展。
+
+## PySceneDetect 场景检测
+
+安装可选依赖：
+
+```bash
+pip install "scenedetect[opencv]>=0.6.4"
+```
+
+启用：
+
+```powershell
+$env:DJI_ENABLE_SCENE_DETECTION = "1"
+python ai_video_processor.py
+```
+
+如需把场景边界也导出成片段：
+
+```powershell
+$env:DJI_ENABLE_SCENE_CLIPS = "1"
+```
+
+如果没有安装 PySceneDetect，脚本会在 `scene_detection.error` 里写明原因，不会阻断普通抽帧和固定切片。
+
+## 关闭 AI，仅做本地素材整理
+
+```powershell
+$env:DJI_ENABLE_AI_ANALYSIS = "0"
+python ai_video_processor.py
+```
+
+这会保留 FFprobe、SRT、抽帧、切片、场景检测和报告输出，适合没有 Ollama 或 API Key 时做基础整理。
 
 ## 常见问题
 
-### 提示 FFmpeg not found
+### FFmpeg not found
 
-请先安装 FFmpeg，并确认 `ffmpeg -version` 和 `ffprobe -version` 可在终端中运行。
+确认 `ffmpeg -version` 和 `ffprobe -version` 都能运行。Windows 推荐使用 `winget install ffmpeg`。
 
 ### Ollama 无法连接
 
-确认 Ollama 已安装、已启动，并且模型已下载：
+确认已执行：
 
 ```bash
 ollama pull llava
 ollama serve
 ```
 
-### 云端后端提示 API Key not set
+也可以临时关闭 AI：
 
-确认已设置对应环境变量：
-
-- 智谱 AI：`ZHIPUAI_API_KEY`
-- OpenAI：`OPENAI_API_KEY`
-- Anthropic：`ANTHROPIC_API_KEY`
-
-### zhipuai、openai 或 anthropic 包未安装
-
-这些 SDK 是可选依赖。仅在使用对应后端时需要安装：
-
-```bash
-pip install zhipuai openai anthropic
+```powershell
+$env:DJI_ENABLE_AI_ANALYSIS = "0"
 ```
 
-当前脚本中的 OpenAI 和 Anthropic 调用直接使用 HTTP API，因此基础运行只需要 `requests`。
-`requirements.txt` 也约束了 `chardet<6`，用于避免部分全局 Python 环境中 `requests` 的字符集兼容警告。
+### 没有 SRT
 
-## 验证
+可以正常处理视频。`telemetry.exists` 会是 `false`，发布建议会说明没有遥测信息。
 
-```bash
-python -m py_compile ai_video_processor.py
-python ai_video_processor.py
-```
+### PySceneDetect 未安装
 
-如果不希望实际调用 AI，可临时将脚本中的 `enable_ai_analysis` 设为 `False`，或保持 Ollama 未启动观察错误处理。
+可以正常处理视频。安装 `scenedetect[opencv]` 后再打开 `DJI_ENABLE_SCENE_DETECTION`。
 
-## 许可证
+### output 和 videos 是否会提交到 GitHub
 
-MIT License。详见 `LICENSE`。
+不会。`videos/` 和 `output/` 是本地素材与生成物目录，已经在 `.gitignore` 中忽略。

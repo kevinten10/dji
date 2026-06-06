@@ -3,89 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DJI 无人机学习与创意实验室</title>
+    <title>DJI 航拍视频 AI 处理工作台</title>
     <style>
         :root {
-            --bg: #071018;
-            --panel: rgba(9, 23, 34, 0.78);
-            --panel-strong: rgba(12, 31, 45, 0.92);
-            --line: rgba(126, 231, 255, 0.22);
-            --text: #eff9ff;
-            --muted: #8aa1ad;
-            --cyan: #2adfff;
-            --green: #38f8a5;
-            --amber: #ffd166;
-            --danger: #ff6b7a;
-            --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+            --bg: #f6f7f4;
+            --paper: #ffffff;
+            --ink: #18202a;
+            --muted: #61707d;
+            --line: #dce3e0;
+            --teal: #087f6f;
+            --blue: #2454d6;
+            --amber: #c77a15;
+            --dark: #111827;
+            --soft: #edf4f1;
+            --shadow: 0 18px 50px rgba(24, 32, 42, 0.12);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
 
         body {
             min-height: 100vh;
             font-family: Inter, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
-            color: var(--text);
-            background:
-                radial-gradient(circle at 22% 16%, rgba(42, 223, 255, 0.16), transparent 30%),
-                radial-gradient(circle at 82% 8%, rgba(56, 248, 165, 0.12), transparent 28%),
-                linear-gradient(145deg, #071018 0%, #0c1b29 46%, #071018 100%);
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background:
-                linear-gradient(rgba(126, 231, 255, 0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(126, 231, 255, 0.035) 1px, transparent 1px);
-            background-size: 48px 48px;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent 82%);
+            color: var(--ink);
+            background: var(--bg);
+            letter-spacing: 0;
         }
 
         a { color: inherit; text-decoration: none; }
 
         .shell {
-            width: min(1160px, calc(100% - 40px));
+            width: min(1180px, calc(100% - 40px));
             margin: 0 auto;
         }
 
         header {
             position: sticky;
             top: 0;
-            z-index: 10;
-            border-bottom: 1px solid rgba(126, 231, 255, 0.12);
-            background: rgba(7, 16, 24, 0.78);
-            backdrop-filter: blur(18px);
+            z-index: 20;
+            border-bottom: 1px solid rgba(24, 32, 42, 0.08);
+            background: rgba(246, 247, 244, 0.86);
+            backdrop-filter: blur(16px);
         }
 
         .nav {
-            min-height: 72px;
+            min-height: 68px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 18px;
+            gap: 20px;
         }
 
         .brand {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-weight: 800;
-            letter-spacing: 0;
         }
 
         .brand-mark {
-            width: 38px;
-            height: 38px;
+            width: 34px;
+            height: 34px;
             display: grid;
             place-items: center;
-            border: 1px solid rgba(42, 223, 255, 0.32);
-            background: linear-gradient(135deg, rgba(42, 223, 255, 0.18), rgba(56, 248, 165, 0.12));
-            box-shadow: 0 0 30px rgba(42, 223, 255, 0.16);
+            border: 1px solid #b6cbc4;
+            background: var(--paper);
+            color: var(--teal);
+            font-weight: 900;
         }
 
         .nav-links {
@@ -96,28 +80,36 @@
             font-size: 14px;
         }
 
-        .nav-links a:hover { color: var(--cyan); }
+        .nav-links a:hover { color: var(--teal); }
 
         .hero {
-            min-height: calc(100vh - 220px);
+            min-height: calc(100vh - 120px);
             display: grid;
-            grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+            grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
             align-items: center;
-            gap: 56px;
-            padding: 38px 0 26px;
+            gap: 42px;
+            padding: 48px 0 34px;
         }
 
-        .hero-copy h1 {
-            max-width: 760px;
-            font-size: clamp(38px, 5.8vw, 70px);
-            line-height: 0.98;
+        .eyebrow {
+            color: var(--teal);
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin-top: 14px;
+            max-width: 740px;
+            font-size: clamp(38px, 5.2vw, 68px);
+            line-height: 1;
             letter-spacing: 0;
         }
 
-        .hero-copy p {
-            max-width: 640px;
-            margin-top: 24px;
-            color: #b7c9d2;
+        .hero p {
+            margin-top: 22px;
+            max-width: 620px;
+            color: var(--muted);
             font-size: 18px;
             line-height: 1.75;
         }
@@ -125,277 +117,252 @@
         .actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
-            margin-top: 34px;
+            gap: 12px;
+            margin-top: 30px;
         }
 
         .button {
+            min-height: 46px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            min-height: 48px;
-            padding: 0 20px;
-            border: 1px solid rgba(126, 231, 255, 0.28);
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text);
-            font-size: 15px;
-            font-weight: 700;
-            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+            padding: 0 18px;
+            border: 1px solid var(--line);
+            background: var(--paper);
+            color: var(--ink);
+            font-weight: 800;
+            font-size: 14px;
+            border-radius: 6px;
+            box-shadow: 0 8px 20px rgba(24, 32, 42, 0.06);
         }
 
         .button.primary {
-            border-color: transparent;
-            background: linear-gradient(135deg, var(--cyan), var(--green));
-            color: #031018;
-            box-shadow: 0 16px 42px rgba(42, 223, 255, 0.22);
+            border-color: var(--teal);
+            background: var(--teal);
+            color: #fff;
         }
 
-        .button:hover {
-            transform: translateY(-2px);
-            border-color: rgba(42, 223, 255, 0.6);
-            background: rgba(42, 223, 255, 0.09);
-        }
-
-        .button.primary:hover { background: linear-gradient(135deg, #73edff, #66ffc0); }
-
-        .flight-console {
-            position: relative;
-            min-height: 450px;
+        .hero-board {
+            background: var(--paper);
             border: 1px solid var(--line);
-            background:
-                linear-gradient(180deg, rgba(9, 23, 34, 0.8), rgba(7, 16, 24, 0.92)),
-                radial-gradient(circle at 50% 35%, rgba(42, 223, 255, 0.12), transparent 45%);
+            border-radius: 8px;
             box-shadow: var(--shadow);
             overflow: hidden;
         }
 
-        .flight-console::before {
+        .preview {
+            position: relative;
+            min-height: 250px;
+            background: var(--dark);
+        }
+
+        .preview img {
+            width: 100%;
+            height: 100%;
+            min-height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .preview::after {
             content: "";
             position: absolute;
             inset: 0;
-            background:
-                linear-gradient(115deg, transparent 0 36%, rgba(42, 223, 255, 0.1) 36% 37%, transparent 37%),
-                linear-gradient(245deg, transparent 0 48%, rgba(56, 248, 165, 0.08) 48% 49%, transparent 49%);
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.05), rgba(17, 24, 39, 0.62));
         }
 
-        .radar {
+        .overlay-readout {
             position: absolute;
-            inset: 64px 38px 138px;
-            border: 1px solid rgba(126, 231, 255, 0.18);
-            background:
-                linear-gradient(rgba(126, 231, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(126, 231, 255, 0.05) 1px, transparent 1px);
-            background-size: 42px 42px;
-        }
-
-        .flight-path {
-            position: absolute;
-            left: 16%;
-            top: 56%;
-            width: 68%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--cyan), var(--green), transparent);
-            transform: rotate(-18deg);
-            box-shadow: 0 0 20px rgba(42, 223, 255, 0.55);
-        }
-
-        .drone-dot {
-            position: absolute;
-            left: 47%;
-            top: 38%;
-            width: 72px;
-            height: 72px;
-            border: 1px solid rgba(42, 223, 255, 0.5);
+            left: 18px;
+            right: 18px;
+            bottom: 18px;
+            z-index: 2;
             display: grid;
-            place-items: center;
-            color: var(--cyan);
-            font-size: 36px;
-            box-shadow: 0 0 46px rgba(42, 223, 255, 0.28);
-            animation: float 3.8s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
         }
 
         .readout {
-            position: absolute;
-            left: 28px;
-            right: 28px;
-            bottom: 28px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            background: rgba(17, 24, 39, 0.64);
+            color: #fff;
+            border-radius: 6px;
         }
 
-        .metric {
-            border: 1px solid rgba(126, 231, 255, 0.18);
-            background: rgba(0, 0, 0, 0.22);
-            padding: 16px;
-        }
-
-        .metric span {
+        .readout span {
             display: block;
-            color: var(--muted);
-            font-size: 12px;
-            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 11px;
+            margin-bottom: 5px;
         }
 
-        .metric strong {
+        .readout strong {
             font-family: "Courier New", monospace;
-            color: var(--green);
-            font-size: 20px;
+            font-size: 17px;
+        }
+
+        .processor {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--line);
+        }
+
+        .processor-panel {
+            background: var(--paper);
+            padding: 18px;
+            min-height: 160px;
+        }
+
+        .processor-panel h2,
+        .processor-panel h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .command {
+            display: block;
+            padding: 12px;
+            border-radius: 6px;
+            background: #101820;
+            color: #d4f7e8;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.55;
+            overflow-x: auto;
+        }
+
+        code:not(.command) {
+            padding: 2px 5px;
+            border-radius: 4px;
+            background: var(--soft);
+            color: var(--dark);
+            font-family: "Courier New", monospace;
+            font-size: 0.92em;
+        }
+
+        .steps {
+            display: grid;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .steps span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--teal);
+            flex: 0 0 auto;
         }
 
         section {
-            padding: 56px 0;
-            border-top: 1px solid rgba(126, 231, 255, 0.08);
+            padding: 58px 0;
+            border-top: 1px solid rgba(24, 32, 42, 0.08);
         }
 
         .section-title {
             display: flex;
-            justify-content: space-between;
             align-items: end;
-            gap: 24px;
+            justify-content: space-between;
+            gap: 26px;
             margin-bottom: 24px;
         }
 
         .section-title h2 {
-            font-size: clamp(28px, 4vw, 44px);
+            font-size: clamp(28px, 3.6vw, 44px);
             line-height: 1.08;
+            letter-spacing: 0;
         }
 
         .section-title p {
-            max-width: 440px;
+            max-width: 520px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .workflow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .stage,
+        .resource {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .stage small {
+            color: var(--amber);
+            font-weight: 800;
+        }
+
+        .stage h3,
+        .resource h3 {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+
+        .stage p,
+        .resource p {
+            margin-top: 10px;
             color: var(--muted);
             line-height: 1.65;
         }
 
-        .demo-grid {
+        .output-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 18px;
         }
 
-        .demo-card, .resource {
-            position: relative;
-            min-height: 280px;
-            border: 1px solid var(--line);
-            background: var(--panel);
-            overflow: hidden;
-            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-        }
-
-        .demo-card:hover, .resource:hover {
-            transform: translateY(-4px);
-            border-color: rgba(42, 223, 255, 0.62);
-            background: var(--panel-strong);
-        }
-
-        .demo-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 28px;
-        }
-
-        .demo-card::after {
-            content: "";
-            position: absolute;
-            inset: auto -20% -35% 30%;
-            height: 180px;
-            background: radial-gradient(circle, rgba(42, 223, 255, 0.22), transparent 60%);
-            pointer-events: none;
-        }
-
-        .demo-icon {
-            width: 54px;
-            height: 54px;
-            display: grid;
-            place-items: center;
-            background: rgba(42, 223, 255, 0.1);
-            border: 1px solid rgba(42, 223, 255, 0.22);
-            color: var(--cyan);
-            font-size: 28px;
-        }
-
-        .demo-card h3 {
-            margin-top: 22px;
-            font-size: 28px;
-        }
-
-        .demo-card p {
-            margin-top: 12px;
-            color: #aebfc8;
-            line-height: 1.7;
-        }
-
-        .demo-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 22px;
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .demo-meta span {
-            border: 1px solid rgba(126, 231, 255, 0.16);
-            padding: 6px 8px;
-            background: rgba(255, 255, 255, 0.03);
+        .output-sample {
+            background: #101820;
+            color: #dceee8;
+            border-radius: 8px;
+            padding: 22px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         .resource-grid {
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr 0.9fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 18px;
         }
 
-        .resource {
-            min-height: 210px;
-            padding: 24px;
-        }
-
-        .resource h3 {
-            color: var(--green);
-            font-size: 22px;
-            margin-bottom: 12px;
-        }
-
-        .resource p {
-            color: #aebfc8;
-            line-height: 1.7;
-        }
-
-        .resource small {
-            display: block;
-            margin-top: 22px;
-            color: var(--muted);
-            font-family: "Courier New", monospace;
-        }
-
         footer {
-            padding: 32px 0 46px;
+            padding: 34px 0 44px;
+            border-top: 1px solid rgba(24, 32, 42, 0.08);
             color: var(--muted);
-            border-top: 1px solid rgba(126, 231, 255, 0.08);
         }
 
-        @media (max-width: 860px) {
-            .shell { width: min(100% - 28px, 680px); }
-            .nav { align-items: flex-start; flex-direction: column; padding: 16px 0; }
+        @media (max-width: 900px) {
+            .shell { width: min(100% - 28px, 720px); }
+            .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
             .nav-links { flex-wrap: wrap; }
-            .hero { grid-template-columns: 1fr; padding-top: 42px; }
-            .actions {
-                flex-direction: column;
-                align-items: stretch;
+            .hero { grid-template-columns: 1fr; padding-top: 38px; }
+            .processor,
+            .workflow,
+            .output-grid,
+            .resource-grid {
+                grid-template-columns: 1fr;
             }
-            .button { width: 100%; }
-            .flight-console { min-height: 430px; }
-            .demo-grid, .resource-grid { grid-template-columns: 1fr; }
+            .overlay-readout { grid-template-columns: 1fr; }
             .section-title { align-items: flex-start; flex-direction: column; }
-            .readout { grid-template-columns: 1fr; }
+            .actions { flex-direction: column; align-items: stretch; }
+            .button { width: 100%; }
         }
     </style>
 </head>
@@ -403,13 +370,14 @@
     <header>
         <nav class="shell nav">
             <a class="brand" href="#">
-                <span class="brand-mark">🚁</span>
-                <span>DJI Lab</span>
+                <span class="brand-mark">DJI</span>
+                <span>Footage Copilot</span>
             </a>
             <div class="nav-links">
-                <a href="#demos">互动演示</a>
-                <a href="#resources">学习资源</a>
-                <a href="AI_VIDEO_PROCESSOR.md">AI 视频处理</a>
+                <a href="#workflow">处理流程</a>
+                <a href="#outputs">输出结构</a>
+                <a href="#experiments">附加实验</a>
+                <a href="AI_VIDEO_PROCESSOR.md">使用指南</a>
                 <a href="https://github.com/kevinten10/dji#readme">GitHub</a>
             </div>
         </nav>
@@ -417,87 +385,116 @@
 
     <main>
         <div class="shell hero">
-            <div class="hero-copy">
-                <h1>DJI 无人机学习与创意实验室</h1>
-                <p>把无人机入门教程、飞行安全清单、3D 模拟练习、小游戏挑战和 AI 航拍视频处理整合到一个轻量静态项目里。打开浏览器，就能开始练习和探索。</p>
+            <div>
+                <div class="eyebrow">Local DJI video workflow</div>
+                <h1>DJI 航拍视频 AI 处理工作台</h1>
+                <p>把 DJI 拍回来的素材放进本地 <code>videos/</code>，自动读取视频信息和同名 SRT 遥测，抽取关键帧，生成预切片、场景列表、AI 画面分析、剪辑建议和发布文案。</p>
                 <div class="actions">
-                    <a class="button primary" href="simulation-simulator/index.html">进入 3D 模拟器</a>
-                    <a class="button" href="games/drone-game/index.html">试玩躲避挑战</a>
-                    <a class="button" href="#resources">查看文档路线</a>
+                    <a class="button primary" href="AI_VIDEO_PROCESSOR.md">查看处理器指南</a>
+                    <a class="button" href="https://github.com/kevinten10/dji#readme">打开 README</a>
+                    <a class="button" href="#experiments">附加实验</a>
                 </div>
             </div>
 
-            <div class="flight-console" aria-label="飞行控制台装饰预览">
-                <div class="radar"></div>
-                <div class="flight-path"></div>
-                <div class="drone-dot">⌁</div>
-                <div class="readout">
-                    <div class="metric"><span>ALTITUDE</span><strong>120 m</strong></div>
-                    <div class="metric"><span>LINK</span><strong>98%</strong></div>
-                    <div class="metric"><span>MODE</span><strong>LEARN</strong></div>
+            <div class="hero-board" aria-label="DJI 航拍视频处理器预览">
+                <div class="preview">
+                    <img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=1200&h=700&fit=crop" alt="航拍山河画面">
+                    <div class="overlay-readout">
+                        <div class="readout"><span>VIDEO</span><strong>4K HEVC</strong></div>
+                        <div class="readout"><span>TELEMETRY</span><strong>SRT</strong></div>
+                        <div class="readout"><span>OUTPUT</span><strong>JSON</strong></div>
+                    </div>
+                </div>
+                <div class="processor">
+                    <div class="processor-panel">
+                        <h2>本地运行</h2>
+                        <code class="command">pip install -r requirements.txt<br>python ai_video_processor.py</code>
+                    </div>
+                    <div class="processor-panel">
+                        <h3>生成内容</h3>
+                        <div class="steps">
+                            <span><i class="dot"></i>analysis.json / report.json</span>
+                            <span><i class="dot"></i>frames / clips / scenes</span>
+                            <span><i class="dot"></i>标题 / 文案 / 标签 / 剪辑建议</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <section id="demos">
+        <section id="workflow">
             <div class="shell">
                 <div class="section-title">
-                    <h2>两个可以直接玩的演示</h2>
-                    <p>保留项目的静态部署优势，同时把第一屏做成真正的演示入口，而不是只放几个链接。</p>
+                    <h2>从素材到发布建议</h2>
+                    <p>首要目标是服务真实航拍后期：先整理本地素材，再把 AI 用在筛片、片段判断和发布包装上。</p>
                 </div>
-
-                <div class="demo-grid">
-                    <a class="demo-card" href="simulation-simulator/index.html">
-                        <div>
-                            <div class="demo-icon">3D</div>
-                            <h3>3D 飞行模拟器</h3>
-                            <p>基于 Three.js 的无人机场景，支持 WASD、方向键、鼠标视角和实时遥测。</p>
-                        </div>
-                        <div class="demo-meta">
-                            <span>Three.js</span>
-                            <span>实时高度</span>
-                            <span>飞行姿态</span>
-                        </div>
-                    </a>
-
-                    <a class="demo-card" href="games/drone-game/index.html">
-                        <div>
-                            <div class="demo-icon">GO</div>
-                            <h3>无人机躲避挑战</h3>
-                            <p>Canvas 小游戏，练习方向控制和反应节奏，包含分数、等级和生命状态。</p>
-                        </div>
-                        <div class="demo-meta">
-                            <span>Canvas</span>
-                            <span>键盘控制</span>
-                            <span>即时反馈</span>
-                        </div>
-                    </a>
+                <div class="workflow">
+                    <div class="stage">
+                        <small>01</small>
+                        <h3>导入 DJI 素材</h3>
+                        <p>扫描 <code>videos/</code> 下的 MP4、MOV、AVI、MKV，并寻找同名 SRT 遥测文件。</p>
+                    </div>
+                    <div class="stage">
+                        <small>02</small>
+                        <h3>读取元信息</h3>
+                        <p>通过 FFprobe 获取时长、分辨率、编码、帧率、码率和文件大小。</p>
+                    </div>
+                    <div class="stage">
+                        <small>03</small>
+                        <h3>抽帧与切片</h3>
+                        <p>通过 FFmpeg 均匀抽帧并生成固定时长 clips，可选 PySceneDetect 场景检测。</p>
+                    </div>
+                    <div class="stage">
+                        <small>04</small>
+                        <h3>AI 分析发布</h3>
+                        <p>接入 Ollama、智谱 AI、OpenAI 或 Anthropic，输出画面分析、标题和剪辑计划。</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="resources">
+        <section id="outputs">
             <div class="shell">
                 <div class="section-title">
-                    <h2>从学习到创作的完整路线</h2>
-                    <p>README 是主线，AI 视频处理器和安全指南是落地工具，适合继续扩展成课程型项目。</p>
+                    <h2>结构化输出</h2>
+                    <p>所有结果都落到本地 <code>output/</code>，方便继续交给剪辑软件、脚本或报告页面使用。</p>
                 </div>
+                <div class="output-grid">
+                    <pre class="output-sample">output/
+├── report.json
+└── DJI_0001/
+    ├── analysis.json
+    ├── scenes.json
+    ├── frames/
+    └── clips/</pre>
+                    <pre class="output-sample">{
+  "video": {"fps": 29.97, "codec": "hevc"},
+  "telemetry": {"fields_detected": ["latitude"]},
+  "publish_package": {"recommended_formats": []},
+  "generated_script": "title, tags, cutting plan"
+}</pre>
+                </div>
+            </div>
+        </section>
 
+        <section id="experiments">
+            <div class="shell">
+                <div class="section-title">
+                    <h2>附加实验</h2>
+                    <p>模拟器和小游戏保留为学习与展示入口，但它们不再是项目主价值；主线是航拍素材处理。</p>
+                </div>
                 <div class="resource-grid">
-                    <a class="resource" href="https://github.com/kevinten10/dji#readme">
-                        <h3>完整学习指南</h3>
-                        <p>选型、法规、安全、航拍参数、构图、航线规划、后期制作和 FAQ。</p>
-                        <small>README.md</small>
+                    <a class="resource" href="simulation-simulator/index.html">
+                        <h3>3D 飞行模拟器</h3>
+                        <p>Three.js 无人机场景，用于体验键盘控制、视角移动和飞行状态展示。</p>
                     </a>
-                    <a class="resource" href="AI_VIDEO_PROCESSOR.md">
-                        <h3>AI 航拍视频处理</h3>
-                        <p>本地提帧、切片、调用 Ollama/智谱/OpenAI/Anthropic 生成画面分析和文案。</p>
-                        <small>ai_video_processor.py</small>
+                    <a class="resource" href="games/drone-game/index.html">
+                        <h3>无人机躲避挑战</h3>
+                        <p>Canvas 小游戏，用来练习方向控制和反应节奏，适合作为轻量互动演示。</p>
                     </a>
                     <a class="resource" href="docs/tutorials/safety-guide.md">
-                        <h3>安全飞行清单</h3>
-                        <p>起飞前检查、空域查询、天气限制、应急处理和合规提醒。</p>
-                        <small>docs/tutorials</small>
+                        <h3>安全飞行资料</h3>
+                        <p>保留飞行安全、合规和基础学习内容，作为真实航拍工作流的前置参考。</p>
                     </a>
                 </div>
             </div>
@@ -505,7 +502,7 @@
     </main>
 
     <footer>
-        <div class="shell">MIT License · 静态部署友好 · 安全飞行，合法飞行</div>
+        <div class="shell">MIT License · GitHub Pages 仅展示项目说明，视频处理在本地运行。</div>
     </footer>
 </body>
 </html>

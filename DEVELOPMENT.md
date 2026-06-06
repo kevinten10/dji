@@ -1,16 +1,26 @@
 # Development Guide
 
-This repository is a static DJI drone learning project with small browser demos
-and a local Python video-processing workflow.
+This repository is now centered on a local DJI aerial-video processing workflow,
+with a static GitHub Pages demo and two secondary browser experiments.
 
 ## Project Surfaces
 
-- `index.html` is the static landing page.
-- `simulation-simulator/` contains the Three.js drone simulator.
-- `games/drone-game/` contains the Canvas obstacle game.
-- `docs/` contains learning material and safety guidance.
-- `ai_video_processor.py` processes local drone video files with FFmpeg and AI
-  vision backends.
+- `ai_video_processor.py` is the main product workflow.
+- `AI_VIDEO_PROCESSOR.md` is the operator guide for local processing.
+- `index.html` is the static demo page for the product positioning.
+- `README.md` is the product README and GitHub entry point.
+- `simulation-simulator/` contains the Three.js drone simulator, now a secondary demo.
+- `games/drone-game/` contains the Canvas obstacle game, now a secondary demo.
+- `docs/` contains learning and safety material.
+
+## Local Media Policy
+
+`videos/` and `output/` are local-only folders:
+
+- `videos/` contains source footage and optional same-name DJI `.SRT` files.
+- `output/` contains generated frames, clips, scene lists, and JSON reports.
+- Neither folder should be committed to GitHub.
+- Do not commit API keys, original customer footage, exported clips, or private GPS data.
 
 ## Run The Static Site
 
@@ -29,9 +39,9 @@ Then open:
 The simulator uses CDN-hosted Three.js, so it needs network access the first
 time those scripts are loaded.
 
-## Run The AI Video Processor
+## Run The Video Processor
 
-Install Python dependencies:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -39,20 +49,31 @@ pip install -r requirements.txt
 
 Install FFmpeg, then choose an AI backend:
 
-```bash
+```powershell
 # Default: local Ollama with LLaVA
 ollama pull llava
-set DJI_AI_BACKEND=ollama
+$env:DJI_AI_BACKEND = "ollama"
 
 # Optional cloud backends
-set DJI_AI_BACKEND=zhipuai
-set ZHIPUAI_API_KEY=your_key
+$env:DJI_AI_BACKEND = "zhipuai"
+$env:ZHIPUAI_API_KEY = "your_key"
 
-set DJI_AI_BACKEND=openai
-set OPENAI_API_KEY=your_key
+$env:DJI_AI_BACKEND = "openai"
+$env:OPENAI_API_KEY = "your_key"
 
-set DJI_AI_BACKEND=anthropic
-set ANTHROPIC_API_KEY=your_key
+$env:DJI_AI_BACKEND = "anthropic"
+$env:ANTHROPIC_API_KEY = "your_key"
+```
+
+Useful local-only overrides:
+
+```powershell
+$env:DJI_VIDEO_DIR = "videos"
+$env:DJI_OUTPUT_DIR = "output"
+$env:DJI_NUM_FRAMES = "6"
+$env:DJI_CLIP_DURATION = "5"
+$env:DJI_ENABLE_AI_ANALYSIS = "0"
+$env:DJI_ENABLE_SCENE_DETECTION = "0"
 ```
 
 Run:
@@ -61,33 +82,74 @@ Run:
 python ai_video_processor.py
 ```
 
-Useful environment overrides:
+## Scene Detection
+
+PySceneDetect is optional because the base workflow should run with only
+FFmpeg, Python, and the listed core dependencies.
 
 ```bash
-set DJI_VIDEO_DIR=videos
-set DJI_OUTPUT_DIR=output
-set DJI_NUM_FRAMES=6
-set DJI_CLIP_DURATION=5
-set DJI_OLLAMA_MODEL=llava
+pip install "scenedetect[opencv]>=0.6.4"
 ```
 
-`videos/` and `output/` are intentionally ignored by Git because they are local
-source media and generated artifacts.
+Enable it:
+
+```powershell
+$env:DJI_ENABLE_SCENE_DETECTION = "1"
+$env:DJI_ENABLE_SCENE_CLIPS = "1"
+```
+
+If the package is not installed, `scene_detection.error` should explain the
+missing dependency without blocking metadata, frame, clip, or SRT processing.
 
 ## Verification Checklist
 
-Before publishing changes:
+Before publishing changes, run:
 
 ```bash
 python -m py_compile ai_video_processor.py examples/python/drone_control.py
+git diff --check
+```
+
+Safe no-input test:
+
+```powershell
+$env:DJI_VIDEO_DIR = "$env:TEMP\dji-empty-videos"
+$env:DJI_OUTPUT_DIR = "$env:TEMP\dji-empty-output"
+$env:DJI_ENABLE_AI_ANALYSIS = "0"
+python ai_video_processor.py
+```
+
+Safe no-SRT processing test can use a tiny generated video in a temp folder:
+
+```powershell
+ffmpeg -f lavfi -i testsrc=size=320x180:rate=10 -t 1 -pix_fmt yuv420p "$env:TEMP\dji-sample-videos\DJI_TEST.MP4"
+$env:DJI_VIDEO_DIR = "$env:TEMP\dji-sample-videos"
+$env:DJI_OUTPUT_DIR = "$env:TEMP\dji-sample-output"
+$env:DJI_ENABLE_AI_ANALYSIS = "0"
+python ai_video_processor.py
+```
+
+Static-page smoke test:
+
+```bash
 python -m http.server 8000
 ```
 
-Then smoke-test the three browser routes listed above. The expected result is
-that the home page renders, both demo links open, and the simulator/game primary
-controls respond without console errors.
+Then verify:
+
+- Home page renders the "DJI 航拍视频 AI 处理工作台" positioning.
+- `AI_VIDEO_PROCESSOR.md` is linked from the home page.
+- Simulator and game links still open.
+- No obvious layout overlap on desktop and mobile widths.
 
 ## Deployment
 
-The project can be deployed as static files. `vercel.json` enables clean URLs
-and disables trailing slashes. No build step is required.
+The GitHub Pages demo is static and does not run the Python processor. It
+explains the local workflow and links to the operator docs. No build step is
+required for Pages.
+
+Current intended deployment shape:
+
+- Source: GitHub Pages from the active `codex/` branch root.
+- Demo URL: `http://kevinten.com/dji/`
+- Local processor: run on the user's machine, not on GitHub Pages.

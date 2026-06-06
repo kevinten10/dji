@@ -9,3 +9,6 @@ chardet>=3.0.2,<6.0.0  # Keep requests quiet if chardet is installed
 # zhipuai>=2.0.0          # For ZhipuAI GLM-4V
 # openai>=1.0.0           # For OpenAI GPT-4o
 # anthropic>=0.18.0       # For Anthropic Claude
+
+# Optional scene detection
+# scenedetect[opencv]>=0.6.4
